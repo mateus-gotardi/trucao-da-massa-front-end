@@ -1,20 +1,35 @@
 "use client";
 import socket from "@/common/connection/webSocket";
-import { Inter } from "@next/font/google";
 import styled from "styled-components";
+import { Card } from "@/components";
+import { TrucoCard } from "utils/interfaces";
 
-const inter = Inter({ subsets: ["latin"] });
 
 const H1 = styled.h1`
   color: red;
 `;
 
+
+
 export default function Home() {
-  socket.on;
+  const handleJoin = () => {
+    socket.on("join", (data) => {
+      console.log(data);
+    });
+
+    socket.emit("join", { name: "test" });
+  };
+
+  const sampleCard: TrucoCard = {
+    value: "A",
+    suit: "copas"
+  }
 
   return (
     <div>
-      <H1 className={inter.className}>Main</H1>
+      <H1>Main</H1>
+      <button onClick={handleJoin}>Join</button>
+      <Card card={sampleCard} />
     </div>
   );
 }
