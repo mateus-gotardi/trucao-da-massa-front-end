@@ -4,6 +4,12 @@ import { GlobalStyle } from "styles/global";
 import { Body } from "styles/layout";
 import Head from "./head";
 
+import { Roboto_Slab } from "@next/font/google";
+
+const Roboto = Roboto_Slab({
+  subsets: ["latin"],
+});
+
 export default function RootLayout({
   children,
 }: {
@@ -18,7 +24,7 @@ export default function RootLayout({
           <header>Header</header>
           <main>
             <aside>SIDEBAR</aside>
-            <section>{children}</section>
+            <section className={Roboto.className}>{children}</section>
           </main>
           <footer>Footer</footer>
         </Body>

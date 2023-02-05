@@ -1,35 +1,23 @@
 "use client";
-import socket from "@/common/connection/webSocket";
-import styled from "styled-components";
 import { Card } from "@/components";
-import { TrucoCard } from "utils/interfaces";
-
-
-const H1 = styled.h1`
-  color: red;
-`;
-
-
+import { ITrucoCard } from "utils/interfaces";
 
 export default function Home() {
-  const handleJoin = () => {
-    socket.on("join", (data) => {
-      console.log(data);
-    });
-
-    socket.emit("join", { name: "test" });
+  const sampleCard: ITrucoCard = {
+    value: "Q",
+    suit: "ouros",
   };
 
-  const sampleCard: TrucoCard = {
-    value: "A",
-    suit: "copas"
-  }
-
   return (
-    <div>
-      <H1>Main</H1>
-      <button onClick={handleJoin}>Join</button>
+    <div style={{ display: "flex", gap: "1rem" }}>
       <Card card={sampleCard} />
+      <Card card={{ value: "4", suit: "copas" }} />
+      <Card card={{ value: "5", suit: "espadas" }} />
+      <Card card={{ value: "6", suit: "paus" }} />
+      <Card card={{ value: "7", suit: "ouros" }} />
+      <Card card={{ value: "Q", suit: "copas" }} />
+      <Card card={{ value: "J", suit: "copas" }} />
+      <Card card={{ value: "K", suit: "copas" }} />
     </div>
   );
 }
