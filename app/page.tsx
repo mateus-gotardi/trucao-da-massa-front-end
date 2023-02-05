@@ -1,4 +1,5 @@
 "use client";
+import socket from "@/common/connection/webSocket";
 import { Inter } from "@next/font/google";
 import styled from "styled-components";
 
@@ -9,9 +10,11 @@ const H1 = styled.h1`
 `;
 
 export default function Home() {
+  socket.on;
+
   return (
-    <main>
-      <H1 className={inter.className}>Hello World</H1>
-    </main>
+    <div>
+      <H1 className={inter.className}>Main</H1>
+    </div>
   );
 }
