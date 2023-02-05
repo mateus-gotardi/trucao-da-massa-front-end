@@ -1,4 +1,4 @@
-import { CardStyles, CardValue, CardSuit } from "./styles";
+import { CardStyles, CardValue, CardSuit, MiddleCard } from "./styles";
 import { ITrucoCard } from "utils/interfaces";
 import {
   BsFillSuitClubFill,
@@ -11,37 +11,51 @@ import { colors } from "..";
 interface ICardProps {
   card: ITrucoCard;
   suitColor?: string;
+  side?: boolean
 }
 const isNumber = (value: string) => {
   return !isNaN(Number(value));
 };
 
-const SuitPicker: React.FC<ICardProps> = ({ card, suitColor }) => {
+const SuitPicker: React.FC<ICardProps> = ({ card, suitColor , side}) => {
   return (
     <>
       {card.suit === "paus" && (
-        <BsFillSuitClubFill color={suitColor} size={28} />
+        <BsFillSuitClubFill color={suitColor} size={side?18:28} />
       )}
       {card.suit === "ouros" && (
-        <BsFillSuitDiamondFill color={suitColor} size={28} />
+        <BsFillSuitDiamondFill color={suitColor} size={side?18:28} />
       )}
       {card.suit === "copas" && (
-        <BsFillSuitHeartFill color={suitColor} size={28} />
+        <BsFillSuitHeartFill color={suitColor} size={side?18:28} />
       )}
       {card.suit === "espadas" && (
-        <BsFillSuitSpadeFill color={suitColor} size={28} />
+        <BsFillSuitSpadeFill color={suitColor} size={side?18:28} />
       )}
     </>
   );
 };
 
 const MiddleOfCard: React.FC<ICardProps> = ({ card, suitColor }) => {
+  let suits = [];
   if (isNumber(card.value)) {
     for (let i = 0; i < Number(card.value); i++) {
-      return <SuitPicker card={card} suitColor={suitColor} />;
+      suits.push(<SuitPicker suitColor={suitColor} card={card} />)
     }
-  } else return;
-  <></>;
+    return <MiddleCard>
+      {suits.map((suit, index) => {
+        return <SuitPicker suitColor={suitColor}
+          card={{
+            value: card.value,
+            suit: card.suit,
+          }} key={index} />
+      })}
+    </MiddleCard>
+  } else return (
+    <MiddleCard>
+      {card.suit === "paus" || card.suit === "espadas" ? <img src={`/figures/black-${card.value}.svg`} alt={`carta ${card.value} de ${card.suit}`}></img>:<img src={`/figures/red-${card.value}.svg`} alt={`carta ${card.value} de ${card.suit}`}></img>}
+    </MiddleCard>
+  )
 };
 
 const Card: React.FC<ICardProps> = ({ card }) => {
@@ -58,43 +72,49 @@ const Card: React.FC<ICardProps> = ({ card }) => {
     }
   };
   const suitColor = colorPicker();
-
-  console.log(card.value, "IsNumber?", isNumber(card.value));
   return (
     <CardStyles>
       <CardSuit position="start">
-        <CardValue color={suitColor}>
-          <h2>{card.value}</h2>
-        </CardValue>
-        <SuitPicker
-          suitColor={suitColor}
-          card={{
-            value: card.value,
-            suit: card.suit,
-          }}
-        />
+        <div className="side">
+          <CardValue color={suitColor}>
+            <h2>{card.value}</h2>
+          </CardValue>
+          <SuitPicker
+            suitColor={suitColor}
+            card={{
+              value: card.value,
+              suit: card.suit,
+            }}
+            side
+          />
+        </div>
+
       </CardSuit>
       <CardValue color={suitColor}>
-        <h1>{card.value}</h1>
+        <MiddleOfCard card={card} suitColor={suitColor} />
       </CardValue>
 
       <CardSuit position="end">
-        <SuitPicker
-          suitColor={suitColor}
-          card={{
-            value: card.value,
-            suit: card.suit,
-          }}
-        />
-        <CardValue color={suitColor}>
-          <h2
-            style={{
-              transform: "rotate(180deg)",
+        <div className="side">
+          <SuitPicker
+            suitColor={suitColor}
+            card={{
+              value: card.value,
+              suit: card.suit,
             }}
-          >
-            {card.value}
-          </h2>
-        </CardValue>
+            side
+          />
+          <CardValue color={suitColor}>
+            <h2
+              style={{
+                transform: "rotate(180deg)",
+              }}
+            >
+              {card.value}
+            </h2>
+          </CardValue>
+        </div>
+
       </CardSuit>
     </CardStyles>
   );
