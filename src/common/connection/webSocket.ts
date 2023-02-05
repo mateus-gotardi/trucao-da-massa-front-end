@@ -1,9 +1,19 @@
-import { io, Socket } from "socket.io-client";
+import { io } from "socket.io-client";
 
-const client = io("ws://localhost:3333/");
+const client = io("http://localhost:3333/");
 
 const socket = {
-  on: console.log(client.on("join", () => console.log("connected"))),
+  on: (event: string, callback: (data: any) => void) => {
+    client.on(event, callback);
+
+    return () => client.off(event, callback);
+  },
+
+  emit: (event: string, data: any) => {
+    client.emit(event, data);
+
+    return () => client.off(event);
+  },
 };
 
 export default socket;
