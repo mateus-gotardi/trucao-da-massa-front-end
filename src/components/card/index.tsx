@@ -11,26 +11,26 @@ import { colors } from "..";
 interface ICardProps {
   card: ITrucoCard;
   suitColor?: string;
-  side?: boolean
+  side?: boolean;
 }
 const isNumber = (value: string) => {
   return !isNaN(Number(value));
 };
 
-const SuitPicker: React.FC<ICardProps> = ({ card, suitColor , side}) => {
+const SuitPicker: React.FC<ICardProps> = ({ card, suitColor, side }) => {
   return (
     <>
       {card.suit === "paus" && (
-        <BsFillSuitClubFill color={suitColor} size={side?18:28} />
+        <BsFillSuitClubFill color={suitColor} size={side ? 18 : 28} />
       )}
       {card.suit === "ouros" && (
-        <BsFillSuitDiamondFill color={suitColor} size={side?18:28} />
+        <BsFillSuitDiamondFill color={suitColor} size={side ? 18 : 28} />
       )}
       {card.suit === "copas" && (
-        <BsFillSuitHeartFill color={suitColor} size={side?18:28} />
+        <BsFillSuitHeartFill color={suitColor} size={side ? 18 : 28} />
       )}
       {card.suit === "espadas" && (
-        <BsFillSuitSpadeFill color={suitColor} size={side?18:28} />
+        <BsFillSuitSpadeFill color={suitColor} size={side ? 18 : 28} />
       )}
     </>
   );
@@ -40,20 +40,16 @@ const MiddleOfCard: React.FC<ICardProps> = ({ card, suitColor }) => {
   let suits = [];
   if (isNumber(card.value)) {
     for (let i = 0; i < Number(card.value); i++) {
-      suits.push(<SuitPicker suitColor={suitColor} card={card} />)
+      suits.push(i)
     }
     return <MiddleCard>
-      {suits.map((suit, index) => {
-        return <SuitPicker suitColor={suitColor}
-          card={{
-            value: card.value,
-            suit: card.suit,
-          }} key={index} />
+      {suits.map((i, index) => {
+        return <SuitPicker suitColor={suitColor} card={card} key={index} />
       })}
     </MiddleCard>
   } else return (
     <MiddleCard>
-      {card.suit === "paus" || card.suit === "espadas" ? <img src={`/figures/black-${card.value}.svg`} alt={`carta ${card.value} de ${card.suit}`}></img>:<img src={`/figures/red-${card.value}.svg`} alt={`carta ${card.value} de ${card.suit}`}></img>}
+      {card.suit === "paus" || card.suit === "espadas" ? <img src={`/figures/black-${card.value}.svg`} alt={`carta ${card.value} de ${card.suit}`}></img> : <img src={`/figures/red-${card.value}.svg`} alt={`carta ${card.value} de ${card.suit}`}></img>}
     </MiddleCard>
   )
 };

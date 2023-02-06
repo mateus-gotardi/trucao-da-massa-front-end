@@ -19,8 +19,9 @@ export default function RootLayout({
     <html lang="pt-br">
       <Head />
       <StyledComponentsRegistry>
+        <GlobalStyle />
         <Body>
-          <GlobalStyle />
+
           <header>Header</header>
           <main>
             <aside>SIDEBAR</aside>
