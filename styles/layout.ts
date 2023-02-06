@@ -1,6 +1,6 @@
 import styled from "styled-components";
 
-export const Body = styled.body`
+export const Body = styled.div`
   height: 100vh;
   background-color: darkgray;
   display: flex;

@@ -1,4 +1,5 @@
 import Card from "./card";
+import HiddenCard from "./hiddenCard";
 
 const colors = {
     black: "#111111",
@@ -7,4 +8,4 @@ const colors = {
 
 }
 
-export { Card, colors };
+export { Card, colors, HiddenCard };

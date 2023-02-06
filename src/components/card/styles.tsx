@@ -1,4 +1,4 @@
-import styled from "styled-components";
+import styled, { css } from "styled-components";
 
 interface ICardSuitProps {
   position: "start" | "end";
@@ -15,7 +15,7 @@ export const CardStyles = styled.div`
   justify-content: center;
   align-items: center;
   border: 1px solid black;
-  padding: 0.5rem .8rem;
+  padding: 0.5rem 0.8rem;
   border-radius: 0.5rem;
   box-shadow: 2px 2px 7px 0px rgba(0, 0, 0, 0.75);
   user-select: none;
@@ -54,7 +54,26 @@ export const CardSuit = styled.div<ICardSuitProps>`
   align-items: center;
   justify-content: ${({ position }) => `flex-${position}`};
   height: 100%;
-  .side{
+  ${({ position }) =>
+    position === "start"
+      ? css`
+          .side {
+            margin-right: 0.5rem;
+            div {
+              margin-bottom: -0.5rem;
+            }
+          }
+        `
+      : css`
+          .side {
+            margin-left: 0.5rem;
+            div {
+              margin-top: -0.5rem;
+            }
+          }
+        `};
+
+  .side {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -73,4 +92,4 @@ export const MiddleCard = styled.div`
   > img {
     width: 100%;
   }
-`
+`;
