@@ -1,4 +1,5 @@
 import styled, { css } from "styled-components";
+import { IColorProps } from "utils/interfaces";
 
 interface ICardSuitProps {
   position: "start" | "end";
@@ -8,7 +9,11 @@ interface ICardValueProps {
   color: string;
 }
 
-export const CardStyles = styled.div`
+interface IMiddleProps {
+  cardValue?: number;
+}
+
+export const CardStyles = styled.div<IColorProps>`
   width: 10rem;
   height: 15rem;
   display: flex;
@@ -20,6 +25,7 @@ export const CardStyles = styled.div`
   box-shadow: 2px 2px 7px 0px rgba(0, 0, 0, 0.75);
   user-select: none;
   overflow: none;
+  background-color: ${({ colors }) => colors.white};
   cursor: pointer;
   &:active {
     transform: scale(0.95);
@@ -80,7 +86,7 @@ export const CardSuit = styled.div<ICardSuitProps>`
   }
 `;
 
-export const MiddleCard = styled.div`
+export const MiddleCard = styled.div<IMiddleProps>`
   display: flex;
   flex-wrap: wrap;
   justify-content: space-around;
@@ -89,6 +95,12 @@ export const MiddleCard = styled.div`
   width: 100%;
   height: 100%;
   padding: 1rem 0;
+  ${({ cardValue }) =>
+    cardValue &&
+    cardValue <= 3 &&
+    css`
+      flex-direction: column;
+    `}
   > img {
     width: 100%;
   }

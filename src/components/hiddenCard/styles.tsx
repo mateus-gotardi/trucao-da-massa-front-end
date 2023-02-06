@@ -1,6 +1,7 @@
 import styled from "styled-components";
+import { IColorProps } from "utils/interfaces";
 
-export const HiddenStyle = styled.div`
+export const HiddenStyle = styled.div<IColorProps>`
   width: 10rem;
   height: 15rem;
   display: flex;
@@ -11,7 +12,9 @@ export const HiddenStyle = styled.div`
   box-shadow: 2px 2px 7px 0px rgba(0, 0, 0, 0.75);
   user-select: none;
   overflow: none;
-  img{
+  background-color: ${({ colors }) => colors.white};
+  z-index: 10;
+  img {
     width: 9rem;
     height: 14rem;
   }
