@@ -12,6 +12,7 @@ interface ICardProps {
   card: ITrucoCard;
   suitColor?: string;
   side?: boolean;
+  activable?: boolean;
 }
 const isNumber = (value: string) => {
   return !isNaN(Number(value));
@@ -21,16 +22,16 @@ const SuitPicker: React.FC<ICardProps> = ({ card, suitColor, side }) => {
   return (
     <>
       {card.suit === "paus" && (
-        <BsFillSuitClubFill color={suitColor} size={side ? 18 : 28} />
+        <BsFillSuitClubFill color={suitColor} size={side ? 16 : 14} />
       )}
       {card.suit === "ouros" && (
-        <BsFillSuitDiamondFill color={suitColor} size={side ? 18 : 28} />
+        <BsFillSuitDiamondFill color={suitColor} size={side ? 16 : 14} />
       )}
       {card.suit === "copas" && (
-        <BsFillSuitHeartFill color={suitColor} size={side ? 18 : 28} />
+        <BsFillSuitHeartFill color={suitColor} size={side ? 16 : 14} />
       )}
       {card.suit === "espadas" && (
-        <BsFillSuitSpadeFill color={suitColor} size={side ? 18 : 28} />
+        <BsFillSuitSpadeFill color={suitColor} size={side ? 16 : 14} />
       )}
     </>
   );
@@ -67,7 +68,7 @@ const MiddleOfCard: React.FC<ICardProps> = ({ card, suitColor }) => {
     );
 };
 
-const Card: React.FC<ICardProps> = ({ card }) => {
+const Card: React.FC<ICardProps> = ({ card, activable }) => {
   const colorPicker = () => {
     switch (card.suit) {
       case "paus":
@@ -82,7 +83,7 @@ const Card: React.FC<ICardProps> = ({ card }) => {
   };
   const suitColor = colorPicker();
   return (
-    <CardStyles colors={colors}>
+    <CardStyles colors={colors} activable={activable}>
       <CardSuit position="start">
         <div className="side">
           <CardValue color={suitColor}>

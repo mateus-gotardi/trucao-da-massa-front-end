@@ -12,24 +12,36 @@ interface ICardValueProps {
 interface IMiddleProps {
   cardValue?: number;
 }
+interface ICardProps extends IColorProps {
+  activable?: boolean;
+}
 
-export const CardStyles = styled.div<IColorProps>`
-  width: 10rem;
-  height: 15rem;
+export const CardStyles = styled.div<ICardProps>`
+  width: 6.4rem;
+  height: 9.6rem;
   display: flex;
   justify-content: center;
   align-items: center;
   border: 1px solid black;
-  padding: 0.5rem 0.8rem;
+  padding: 0.5rem 0.6rem;
   border-radius: 0.5rem;
   box-shadow: 2px 2px 7px 0px rgba(0, 0, 0, 0.75);
   user-select: none;
   overflow: none;
   background-color: ${({ colors }) => colors.white};
-  cursor: pointer;
-  &:active {
-    transform: scale(0.95);
-  }
+  transition: all 0.1s ease-in-out;
+  ${({ activable }) =>
+    activable &&
+    css`
+      cursor: pointer;
+      &:active {
+        transform: scale(1.05);
+      }
+      &:hover {
+        position: relative;
+        top: -.6rem;
+      }
+    `}
 `;
 
 export const CardValue = styled.div<ICardValueProps>`

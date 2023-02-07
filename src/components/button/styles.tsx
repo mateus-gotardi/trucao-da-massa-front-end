@@ -1,10 +1,11 @@
 import styled from "styled-components";
 
-export const ButtonStyles = styled.button`
+export const ButtonStyles = styled.button<{ inactive: boolean }>`
   border: none;
   border-radius: 0.5rem;
   width: 12rem;
   height: 3.5rem;
+  ${({ inactive }) => inactive && "opacity: 0.5;"}
   background: rgb(247, 255, 0);
   background: radial-gradient(
     circle,
@@ -18,11 +19,15 @@ export const ButtonStyles = styled.button`
   display: flex;
   justify-content: center;
   align-items: center;
+  gap: 1rem;
   -webkit-box-shadow: 3px 3px 14px 0px rgba(0, 0, 0, 0.75);
   -moz-box-shadow: 3px 3px 14px 0px rgba(0, 0, 0, 0.75);
   box-shadow: 3px 3px 14px 0px rgba(0, 0, 0, 0.75);
-  cursor: pointer;
   transition: all 0.2s ease-in-out;
+  ${({ inactive }) =>
+    !inactive &&
+    `
+  cursor: pointer;
   &:hover {
     background: rgb(247, 255, 0);
     background: radial-gradient(
@@ -36,5 +41,11 @@ export const ButtonStyles = styled.button`
     -webkit-box-shadow: -3px -1px 20px -7px rgba(0, 0, 0, 0.75);
     -moz-box-shadow: -3px -1px 20px -7px rgba(0, 0, 0, 0.75);
     box-shadow: -3px -1px 20px -7px rgba(0, 0, 0, 0.75);
+  }
+ `}
+
+  > p {
+    margin: 0;
+    font-size: 1rem;
   }
 `;

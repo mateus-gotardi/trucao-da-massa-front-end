@@ -12,6 +12,11 @@ export interface IPlayerState {
 export interface IPlayer extends IPlayerState {
   team: "team1" | "team2";
 }
+
+export interface IPlayedCard {
+  playerId: string;
+  card: ITrucoCard;
+}
 export interface IGameState {
   tableId: string;
   team1: IPlayerState[];
@@ -20,9 +25,16 @@ export interface IGameState {
     team1: number;
     team2: number;
   };
+  partialScore: {
+    team1: number;
+    team2: number;
+  };
   turn: string;
   dealer: string;
   vira: ITrucoCard;
+  points: number;
+  playedCards: IPlayedCard[];
+  lastTruco: string;
 }
 
 export interface IColorProps {

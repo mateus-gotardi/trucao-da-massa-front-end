@@ -2,8 +2,8 @@ import styled from "styled-components";
 import { IColorProps } from "utils/interfaces";
 
 export const HiddenStyle = styled.div<IColorProps>`
-  width: 10rem;
-  height: 15rem;
+  width: 6.4rem;
+  height: 9.6rem;
   display: flex;
   justify-content: center;
   align-items: center;
@@ -15,7 +15,6 @@ export const HiddenStyle = styled.div<IColorProps>`
   background-color: ${({ colors }) => colors.white};
   z-index: 10;
   img {
-    width: 9rem;
-    height: 14rem;
+    width: 6rem;
   }
 `;
