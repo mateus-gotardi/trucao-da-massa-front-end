@@ -32,6 +32,7 @@ export interface IGameState {
   turn: string;
   dealer: string;
   vira: ITrucoCard;
+  manilha: string;
   points: number;
   playedCards: IPlayedCard[];
   lastTruco: string;

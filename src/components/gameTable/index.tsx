@@ -81,6 +81,7 @@ const GameTable: React.FC = () => {
       { card: { value: "Q", suit: "copas" }, playerId: "456" },
     ],
     lastTruco: "team2",
+    manilha: '4'
   });
   const getPartner = () => {
     if (playerState.team === "team1") {
