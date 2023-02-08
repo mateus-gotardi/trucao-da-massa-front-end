@@ -3,7 +3,7 @@ import styled from "styled-components";
 export const GameTableStyles = styled.div<{ truco: boolean }>`
   transform-origin: bottom;
   transform-box: fill-box;
-  @keyframes truco {
+  @keyframes shake {
     from {
       transform: scale(1);
     }
@@ -12,7 +12,9 @@ export const GameTableStyles = styled.div<{ truco: boolean }>`
     }
   }
   ${({ truco }) =>
-    truco && `  animation: truco 0.07s ease-in-out infinite alternate;  `}
+    truco &&
+    `  
+    animation: shake 0.07s ease-in-out infinite alternate;  `}
   display: flex;
   flex-direction: column;
   width: 100%;
@@ -43,15 +45,17 @@ export const ConfigStyles = styled.section`
   align-items: flex-start;
   justify-content: space-between;
   gap: 4rem;
+  color: white;
   > section {
     display: flex;
     gap: 1rem;
     svg {
-      background: rgb(247, 255, 0);
+      background: rgb(2, 0, 36);
       background: radial-gradient(
         circle,
-        rgba(247, 255, 0, 1) 0%,
-        rgba(29, 255, 0, 1) 100%
+        rgba(2, 0, 36, 1) 0%,
+        rgba(19, 2, 94, 1) 0%,
+        rgba(128, 108, 217, 1) 100%
       );
       border-radius: 50%;
       width: 3rem;
@@ -63,22 +67,24 @@ export const ConfigStyles = styled.section`
       cursor: pointer;
       transition: all 0.2s ease-in-out;
       &:hover {
-        background: rgb(247, 255, 0);
+        background: rgb(2, 0, 36);
         background: radial-gradient(
           circle,
-          rgba(247, 255, 0, 1) 27%,
-          rgba(29, 255, 0, 1) 80%
+          rgba(2, 0, 36, 1) 0%,
+          rgba(19, 2, 94, 1) 59%,
+          rgba(128, 108, 217, 1) 100%
         );
       }
       &:active {
         -webkit-box-shadow: -3px -1px 20px -7px rgba(0, 0, 0, 0.75);
         -moz-box-shadow: -3px -1px 20px -7px rgba(0, 0, 0, 0.75);
         box-shadow: -3px -1px 20px -7px rgba(0, 0, 0, 0.75);
-        background: rgb(29, 255, 0);
+        background: rgb(2, 0, 36);
         background: radial-gradient(
           circle,
-          rgba(29, 255, 0, 1) 0%,
-          rgba(247, 255, 0, 1) 100%
+          rgba(2, 0, 36, 1) 0%,
+          rgba(128, 108, 217, 1) 34%,
+          rgba(19, 2, 94, 1) 86%
         );
       }
     }

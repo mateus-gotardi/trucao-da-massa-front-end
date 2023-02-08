@@ -3,8 +3,7 @@ import { IGameState, IPlayer } from "utils/interfaces";
 import { Button, Card, HiddenCard } from "..";
 import * as Styled from "./styles";
 import { ImExit } from "react-icons/im";
-import { GrConfigure } from "react-icons/gr";
-import { BsQuestionLg } from "react-icons/bs";
+import { BsQuestionLg, BsFillGearFill } from "react-icons/bs";
 import { GiCardPlay } from "react-icons/gi";
 
 const ScoreBall: React.FC<{ fill: boolean }> = ({ fill }) => {
@@ -81,7 +80,7 @@ const GameTable: React.FC = () => {
       { card: { value: "Q", suit: "copas" }, playerId: "456" },
     ],
     lastTruco: "team2",
-    manilha: '4'
+    manilha: "4",
   });
   const getPartner = () => {
     if (playerState.team === "team1") {
@@ -123,7 +122,7 @@ const GameTable: React.FC = () => {
     setTrucoShake(true);
     setTimeout(() => {
       setTrucoShake(false);
-    }, 1000)
+    }, 1000);
   };
 
   const partner = getPartner();
@@ -137,15 +136,35 @@ const GameTable: React.FC = () => {
         <Styled.ScoreStyles>
           <div>
             <h1>PONTOS</h1>
-            <h2>NÓS: {gameState.score[playerState.team]}</h2>
+            <h2>
+              NÓS: {playerState.team && gameState.score[playerState.team]}
+            </h2>
             <h2>ELES: {gameState.score[getOpponent()]}</h2>
           </div>
           <div>
             <h1>RODADA</h1>
             <h3>
-              <ScoreBall fill={gameState.partialScore[playerState.team] >= 1} />
-              <ScoreBall fill={gameState.partialScore[playerState.team] >= 2} />
-              <ScoreBall fill={gameState.partialScore[playerState.team] >= 3} />
+              <ScoreBall
+                fill={
+                  playerState.team
+                    ? gameState.partialScore[playerState.team] >= 1
+                    : false
+                }
+              />
+              <ScoreBall
+                fill={
+                  playerState.team
+                    ? gameState.partialScore[playerState.team] >= 2
+                    : false
+                }
+              />
+              <ScoreBall
+                fill={
+                  playerState.team
+                    ? gameState.partialScore[playerState.team] >= 3
+                    : false
+                }
+              />
             </h3>
             <h3>
               <ScoreBall fill={gameState.partialScore[getOpponent()] >= 1} />
@@ -167,7 +186,7 @@ const GameTable: React.FC = () => {
           <div>
             <Styled.Deck>
               <div className="vira">
-                <Card card={gameState.vira}></Card>
+                {gameState.vira && <Card card={gameState.vira}></Card>}
               </div>
               <div className="monte">
                 <HiddenCard></HiddenCard>
@@ -180,7 +199,7 @@ const GameTable: React.FC = () => {
           <section>
             <BsQuestionLg size={30} />
 
-            <GrConfigure size={30} />
+            <BsFillGearFill size={30} />
 
             <ImExit size={30} />
           </section>
@@ -210,40 +229,57 @@ const GameTable: React.FC = () => {
           )}
         </Styled.OtherPlayerHand>
         <Styled.PublicTable>
-          <Styled.LeftPlayed style={{
-            transform: `rotate(${Math.floor(Math.random() * (120 - 55 + 1) + 55)}deg)`
-          }}>
+          <Styled.LeftPlayed
+            style={{
+              transform: `rotate(${Math.floor(
+                Math.random() * (120 - 55 + 1) + 55
+              )}deg)`,
+            }}
+          >
             {gameState.playedCards.map((played, index) => {
               if (played.playerId === gameState[getOpponent()][0].playerId)
                 return <Card key={index} card={played.card}></Card>;
             })}
           </Styled.LeftPlayed>
           <Styled.TeamPlayed>
-            <div style={{
-              transform: `rotate(-${Math.floor(Math.random() * (30 - (-30) + 1) + (-30))}deg)`,
-            }}>
+            <div
+              style={{
+                transform: `rotate(-${Math.floor(
+                  Math.random() * (30 - -30 + 1) + -30
+                )}deg)`,
+              }}
+            >
               {gameState.playedCards.map((played, index) => {
                 if (
+                  playerState.team &&
                   played.playerId ===
-                  gameState[playerState.team].filter(
-                    (player) => player.playerId !== playerState.playerId
-                  )[0].playerId
+                    gameState[playerState.team].filter(
+                      (player) => player.playerId !== playerState.playerId
+                    )[0].playerId
                 )
                   return <Card key={index} card={played.card}></Card>;
               })}
             </div>
-            <div style={{
-              transform: `rotate(${Math.floor(Math.random() * (30 - (-30) + 1) + (-30))}deg)`,
-            }}>
+            <div
+              style={{
+                transform: `rotate(${Math.floor(
+                  Math.random() * (30 - -30 + 1) + -30
+                )}deg)`,
+              }}
+            >
               {gameState.playedCards.map((played, index) => {
                 if (played.playerId === playerState.playerId)
                   return <Card key={index} card={played.card}></Card>;
               })}
             </div>
           </Styled.TeamPlayed>
-          <Styled.RightPlayed style={{
-            transform: `rotate(-${Math.floor(Math.random() * (120 - 55 + 1) + 55)}deg)`
-          }}>
+          <Styled.RightPlayed
+            style={{
+              transform: `rotate(-${Math.floor(
+                Math.random() * (120 - 55 + 1) + 55
+              )}deg)`,
+            }}
+          >
             {gameState.playedCards.map((played, index) => {
               if (played.playerId === gameState[getOpponent()][1].playerId)
                 return <Card key={index} card={played.card}></Card>;

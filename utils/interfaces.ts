@@ -10,7 +10,11 @@ export interface IPlayerState {
 }
 
 export interface IPlayer extends IPlayerState {
-  team: "team1" | "team2";
+  team: "team1" | "team2" | null;
+}
+
+export interface ILocalPlayer extends IPlayer {
+  roomId: string;
 }
 
 export interface IPlayedCard {
@@ -31,7 +35,7 @@ export interface IGameState {
   };
   turn: string;
   dealer: string;
-  vira: ITrucoCard;
+  vira: ITrucoCard | null;
   manilha: string;
   points: number;
   playedCards: IPlayedCard[];

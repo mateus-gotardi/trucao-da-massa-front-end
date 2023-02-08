@@ -6,15 +6,16 @@ export const ButtonStyles = styled.button<{ inactive: boolean }>`
   width: 12rem;
   height: 3.5rem;
   ${({ inactive }) => inactive && "opacity: 0.5;"}
-  background: rgb(247, 255, 0);
+  background: rgb(2,0,36);
   background: radial-gradient(
     circle,
-    rgba(247, 255, 0, 1) 0%,
-    rgba(29, 255, 0, 1) 100%
+    rgba(2, 0, 36, 1) 0%,
+    rgba(19, 2, 94, 1) 0%,
+    rgba(128, 108, 217, 1) 100%
   );
   font-size: 1.5rem;
   font-weight: 600;
-  color: black;
+  color: white;
   padding-top: 0.5rem;
   display: flex;
   justify-content: center;
@@ -29,12 +30,10 @@ export const ButtonStyles = styled.button<{ inactive: boolean }>`
     `
   cursor: pointer;
   &:hover {
-    background: rgb(247, 255, 0);
-    background: radial-gradient(
-      circle,
-      rgba(247, 255, 0, 1) 27%,
-      rgba(29, 255, 0, 1) 80%
-    );
+    background: rgb(2,0,36);
+    background: radial-gradient(circle, rgba(2,0,36,1) 0%,
+     rgba(19,2,94,1) 100%,
+     rgba(128,108,217,1) 100%);
   }
   &:active {
     transform: scale(0.95);
