@@ -1,12 +1,32 @@
-import React, { useContext } from "react";
+import React, { useContext, useEffect } from "react";
 import { Button, CreateRoom, JoinRoom } from "@/components";
 import socket from "@/common/connection/webSocket";
 import Link from "next/link";
 import { IGameState, ILocalPlayer, IPlayer } from "utils/interfaces";
 import { GameContext } from "GameContext";
-import { saveStateInLocalStorage } from "utils/functions";
+import { getStateFromLocalStorage, removeStateFromLocalStorage, saveStateInLocalStorage } from "utils/functions";
+import { useRouter } from "next/router";
 
 export default function Lobby() {
+  const value = useContext(GameContext);
+  const router = useRouter();
+  useEffect(() => {
+    let localState: ILocalPlayer = getStateFromLocalStorage("playerState");
+    if (localState) {
+      socket.emit("setupconnection", localState);
+    }
+  }, []);
+
+  socket.on("setupconnection", (data: any) => {
+    if (data.status === true) {
+      value.setPlayerState(data.player);
+      value.setGameState(data.table);
+      router.push("/game");
+    } else {
+      removeStateFromLocalStorage("playerState");
+    }
+  })
+
   const getRooms = () => {
     socket.emit("getrooms", {});
   };
@@ -14,7 +34,7 @@ export default function Lobby() {
     console.log(data);
   });
 
-  const value = useContext(GameContext);
+
 
   socket.on("join", (data: { table: IGameState; player: IPlayer }) => {
     value.setGameState(data.table);
@@ -36,7 +56,7 @@ export default function Lobby() {
       <Button available onClick={getRooms}>
         Get Rooms
       </Button>
-      <Button available onClick={()=>{
+      <Button available onClick={() => {
         console.log(value.playerState)
         console.log(value.gameState)
       }}>

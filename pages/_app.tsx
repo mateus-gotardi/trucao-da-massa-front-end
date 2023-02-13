@@ -5,7 +5,7 @@ import React, { useEffect, useState } from "react";
 import { GameContext } from "GameContext";
 import { IGameState, ILocalPlayer, IPlayer } from "utils/interfaces";
 import socket from "@/common/connection/webSocket";
-import { getStateFromLocalStorage } from "utils/functions";
+import { getStateFromLocalStorage, removeStateFromLocalStorage } from "utils/functions";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [playerState, setPlayerState] = React.useState<IPlayer>({
@@ -33,6 +33,7 @@ export default function App({ Component, pageProps }: AppProps) {
     playedCards: [],
     lastTruco: "",
     manilha: "",
+    gameStarted: false,
   });
 
   useEffect(() => {
@@ -43,15 +44,27 @@ export default function App({ Component, pageProps }: AppProps) {
   }, []);
 
   socket.on("setupconnection", (data: any) => {
-    if (data.status) {
+    if (data.status === true) {
       setPlayerState(data.player);
       setGameState(data.table);
+    } else {
+      removeStateFromLocalStorage("playerState")
     }
   });
 
   socket.on("update", (data: IGameState) => {
     setGameState(data);
-    console.log(data)
+    let newPlayerState = playerState;
+    let searchPlayer
+    if (data.team1.find((player) => player.playerId === playerState.playerId)) {
+      searchPlayer = data.team1.find((player) => player.playerId === playerState.playerId);
+    } else if (!searchPlayer) {
+      searchPlayer = data.team2.find((player) => player.playerId === playerState.playerId);
+    }
+    if (searchPlayer) {
+      newPlayerState.hand = searchPlayer.hand;
+      setPlayerState(newPlayerState);
+    }
   })
 
   return (

@@ -39,12 +39,12 @@ export const Section = styled.section`
 `;
 
 export const ConfigStyles = styled.section`
-  width: 29rem;
+  width: 20rem;
   height: 12rem;
   display: flex;
   align-items: flex-start;
-  justify-content: space-between;
-  gap: 4rem;
+  justify-content: flex-end;
+  gap: 2rem;
   color: white;
   > section {
     display: flex;
@@ -92,7 +92,7 @@ export const ConfigStyles = styled.section`
 `;
 
 export const ScoreStyles = styled.div`
-  width: 29rem;
+  width: 20rem;
   height: 8rem;
   display: flex;
   align-items: flex-start;
@@ -105,6 +105,9 @@ export const ScoreStyles = styled.div`
     display: flex;
     flex-direction: column;
     align-items: center;
+    > h1 {
+      font-size: 1rem;
+    }
     > h3 {
       margin: 0;
       padding: 0;
@@ -120,13 +123,13 @@ export const ScoreStyles = styled.div`
   }
 `;
 
-export const ScoreBall = styled.span<{ fill: boolean }>`
+export const ScoreBall = styled.span<{ fillColor: boolean }>`
   width: 1.2rem;
   height: 1.4rem;
   border: 3px solid white;
   padding: 0 0.5rem;
   border-radius: 50%;
-  background-color: ${({ fill }) => (fill ? "white" : "none")};
+  background-color: ${({ fillColor }) => (fillColor ? "white" : "transparent")};
 `;
 
 export const Deck = styled.div`

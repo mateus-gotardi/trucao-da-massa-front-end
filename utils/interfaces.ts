@@ -40,6 +40,7 @@ export interface IGameState {
   points: number;
   playedCards: IPlayedCard[];
   lastTruco: string;
+  gameStarted: boolean;
 }
 
 export interface IColorProps {

@@ -1,87 +1,23 @@
-import React from "react";
+import React, { useContext, useState } from "react";
 import { IGameState, IPlayer } from "utils/interfaces";
 import { Button, Card, HiddenCard } from "..";
 import * as Styled from "./styles";
 import { ImExit } from "react-icons/im";
 import { BsQuestionLg, BsFillGearFill } from "react-icons/bs";
 import { GiCardPlay } from "react-icons/gi";
+import { GameContext } from "GameContext";
 
-const ScoreBall: React.FC<{ fill: boolean }> = ({ fill }) => {
-  return <Styled.ScoreBall fill={fill} />;
+const ScoreBall: React.FC<{ fillColor: boolean }> = ({ fillColor }) => {
+  return <Styled.ScoreBall fillColor={fillColor} />;
 };
 
 const GameTable: React.FC = () => {
-  const [trucoShake, setTrucoShake] = React.useState<boolean>(false);
-  const [truco, setTruco] = React.useState<number>(1);
-  const [playerState, setPlayerState] = React.useState<IPlayer>({
-    playerId: "123",
-    name: "Player 1",
-    hand: [
-      { value: "7", suit: "paus" },
-      { value: "J", suit: "ouros" },
-      { value: "4", suit: "paus" },
-    ],
-    team: "team1",
-  });
-  const [gameState, setGameState] = React.useState<IGameState>({
-    tableId: "0",
-    team1: [
-      {
-        playerId: "123",
-        name: "Player 1",
-        hand: [
-          { value: "A", suit: "copas" },
-          { value: "K", suit: "ouros" },
-          { value: "3", suit: "paus" },
-        ],
-      },
-      {
-        playerId: "456",
-        name: "Player 2",
-        hand: [
-          { value: "4", suit: "espadas" },
-          { value: "5", suit: "paus" },
-        ],
-      },
-    ],
-    team2: [
-      {
-        playerId: "789",
-        name: "Player 1",
-        hand: [
-          { value: "7", suit: "ouros" },
-          { value: "Q", suit: "espadas" },
-        ],
-      },
-      {
-        playerId: "101",
-        name: "Player 2",
-        hand: [
-          { value: "K", suit: "ouros" },
-          { value: "3", suit: "espadas" },
-        ],
-      },
-    ],
-    score: {
-      team1: 7,
-      team2: 4,
-    },
-    partialScore: {
-      team1: 0,
-      team2: 0,
-    },
-    vira: { value: "3", suit: "paus" },
-    turn: "789",
-    dealer: "123",
-    points: 1,
-    playedCards: [
-      { card: { value: "A", suit: "ouros" }, playerId: "789" },
-      { card: { value: "7", suit: "copas" }, playerId: "101" },
-      { card: { value: "Q", suit: "copas" }, playerId: "456" },
-    ],
-    lastTruco: "team2",
-    manilha: "4",
-  });
+  const [trucoShake, setTrucoShake] = useState<boolean>(false);
+  const [truco, setTruco] = useState<number>(1);
+  const value = useContext(GameContext);
+  const gameState: IGameState = value.gameState;
+  const playerState: IPlayer = value.playerState;
+
   const getPartner = () => {
     if (playerState.team === "team1") {
       return gameState.team1.find(
@@ -145,21 +81,21 @@ const GameTable: React.FC = () => {
             <h1>RODADA</h1>
             <h3>
               <ScoreBall
-                fill={
+                fillColor={
                   playerState.team
                     ? gameState.partialScore[playerState.team] >= 1
                     : false
                 }
               />
               <ScoreBall
-                fill={
+                fillColor={
                   playerState.team
                     ? gameState.partialScore[playerState.team] >= 2
                     : false
                 }
               />
               <ScoreBall
-                fill={
+                fillColor={
                   playerState.team
                     ? gameState.partialScore[playerState.team] >= 3
                     : false
@@ -167,9 +103,9 @@ const GameTable: React.FC = () => {
               />
             </h3>
             <h3>
-              <ScoreBall fill={gameState.partialScore[getOpponent()] >= 1} />
-              <ScoreBall fill={gameState.partialScore[getOpponent()] >= 2} />
-              <ScoreBall fill={gameState.partialScore[getOpponent()] >= 3} />
+              <ScoreBall fillColor={gameState.partialScore[getOpponent()] >= 1} />
+              <ScoreBall fillColor={gameState.partialScore[getOpponent()] >= 2} />
+              <ScoreBall fillColor={gameState.partialScore[getOpponent()] >= 3} />
             </h3>
           </div>
           <div>
@@ -186,7 +122,7 @@ const GameTable: React.FC = () => {
           <div>
             <Styled.Deck>
               <div className="vira">
-                {gameState.vira && <Card card={gameState.vira}></Card>}
+                {gameState.vira && gameState.gameStarted && <Card card={gameState.vira}></Card>}
               </div>
               <div className="monte">
                 <HiddenCard></HiddenCard>
@@ -214,19 +150,24 @@ const GameTable: React.FC = () => {
             marginLeft: "0",
           }}
         >
-          {playerState.team === "team1" ? (
-            <>
-              {gameState.team2[0].hand.map((card, index) => {
-                return <HiddenCard key={index}></HiddenCard>;
-              })}
+          {
+            gameState.gameStarted && <>
+              {playerState.team === "team1" ? (
+                <>
+                  {gameState.team2[0].hand.map((card, index) => {
+                    return <HiddenCard key={index}></HiddenCard>;
+                  })}
+                </>
+              ) : (
+                <>
+                  {gameState.team1[0].hand.map((card, index) => {
+                    return <HiddenCard key={index}></HiddenCard>;
+                  })}
+                </>
+              )}
             </>
-          ) : (
-            <>
-              {gameState.team1[0].hand.map((card, index) => {
-                return <HiddenCard key={index}></HiddenCard>;
-              })}
-            </>
-          )}
+          }
+
         </Styled.OtherPlayerHand>
         <Styled.PublicTable>
           <Styled.LeftPlayed
@@ -253,9 +194,9 @@ const GameTable: React.FC = () => {
                 if (
                   playerState.team &&
                   played.playerId ===
-                    gameState[playerState.team].filter(
-                      (player) => player.playerId !== playerState.playerId
-                    )[0].playerId
+                  gameState[playerState.team].filter(
+                    (player) => player.playerId !== playerState.playerId
+                  )[0].playerId
                 )
                   return <Card key={index} card={played.card}></Card>;
               })}
@@ -293,19 +234,22 @@ const GameTable: React.FC = () => {
             marginLeft: "0",
           }}
         >
-          {playerState.team === "team1" ? (
-            <>
-              {gameState.team2[1].hand.map((card, index) => {
-                return <HiddenCard key={index}></HiddenCard>;
-              })}
-            </>
-          ) : (
-            <>
-              {gameState.team1[1].hand.map((card, index) => {
-                return <HiddenCard key={index}></HiddenCard>;
-              })}
-            </>
-          )}
+          {gameState.gameStarted && <>
+            {playerState.team === "team1" ? (
+              <>
+                {gameState.team2[1].hand.map((card, index) => {
+                  return <HiddenCard key={index}></HiddenCard>;
+                })}
+              </>
+            ) : (
+              <>
+                {gameState.team1[1].hand.map((card, index) => {
+                  return <HiddenCard key={index}></HiddenCard>;
+                })}
+              </>
+            )}
+          </>}
+
         </Styled.OtherPlayerHand>
       </Styled.Section>
       <Styled.Section
@@ -313,7 +257,7 @@ const GameTable: React.FC = () => {
           alignItems: "flex-end",
         }}
       >
-        <Button onClick={() => {}} available>
+        <Button onClick={() => { }} available>
           <GiCardPlay />
           <p>VIRAR</p>
         </Button>
