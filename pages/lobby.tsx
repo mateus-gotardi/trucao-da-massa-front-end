@@ -1,5 +1,5 @@
 import React, { useContext, useEffect } from "react";
-import { Button, CreateRoom, JoinRoom } from "@/components";
+import { Button, CreateRoom, JoinRoom, RoomsList } from "@/components";
 import socket from "@/common/connection/webSocket";
 import Link from "next/link";
 import { IGameState, ILocalPlayer, IPlayer } from "utils/interfaces";
@@ -10,6 +10,8 @@ import { useRouter } from "next/router";
 export default function Lobby() {
   const value = useContext(GameContext);
   const router = useRouter();
+  const [rooms, setRooms] = React.useState<Array<String>>([]);
+
   useEffect(() => {
     let localState: ILocalPlayer = getStateFromLocalStorage("playerState");
     if (localState) {
@@ -32,6 +34,7 @@ export default function Lobby() {
   };
   socket.on("getrooms", (data: any) => {
     console.log(data);
+    setRooms(data);
   });
 
 
@@ -63,6 +66,7 @@ export default function Lobby() {
         Get states
       </Button>
       <Link href="/game">Game</Link>
+      <RoomsList rooms={rooms} />
     </>
   );
 }

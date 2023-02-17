@@ -153,14 +153,19 @@ export const PublicTable = styled.div`
   align-items: space-between;
   width: 45rem;
 `;
-export const LeftPlayed = styled.div``;
-export const RightPlayed = styled.div``;
+export const LeftPlayed = styled.div`
+transform: rotate(${Math.floor(Math.random() * (120 - 55 + 1) + 55)}deg);
+`;
+export const RightPlayed = styled.div`
+transform: rotate(-${Math.floor(Math.random() * (120 - 55 + 1) + 55)}deg)
+`;
 export const TeamPlayed = styled.div`
   display: flex;
   flex-direction: column;
   gap: 0.5rem;
   > div {
     height: 9.6rem;
+    transform: rotate(-${Math.floor(Math.random() * (30 - -30 + 1) + -30)}deg);
   }
 `;
 

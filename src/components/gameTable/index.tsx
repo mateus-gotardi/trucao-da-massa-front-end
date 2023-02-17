@@ -170,26 +170,14 @@ const GameTable: React.FC = () => {
 
         </Styled.OtherPlayerHand>
         <Styled.PublicTable>
-          <Styled.LeftPlayed
-            style={{
-              transform: `rotate(${Math.floor(
-                Math.random() * (120 - 55 + 1) + 55
-              )}deg)`,
-            }}
-          >
+          <Styled.LeftPlayed>
             {gameState.playedCards.map((played, index) => {
               if (played.playerId === gameState[getOpponent()][0].playerId)
                 return <Card key={index} card={played.card}></Card>;
             })}
           </Styled.LeftPlayed>
           <Styled.TeamPlayed>
-            <div
-              style={{
-                transform: `rotate(-${Math.floor(
-                  Math.random() * (30 - -30 + 1) + -30
-                )}deg)`,
-              }}
-            >
+            <div>
               {gameState.playedCards.map((played, index) => {
                 if (
                   playerState.team &&
@@ -201,26 +189,14 @@ const GameTable: React.FC = () => {
                   return <Card key={index} card={played.card}></Card>;
               })}
             </div>
-            <div
-              style={{
-                transform: `rotate(${Math.floor(
-                  Math.random() * (30 - -30 + 1) + -30
-                )}deg)`,
-              }}
-            >
+            <div>
               {gameState.playedCards.map((played, index) => {
                 if (played.playerId === playerState.playerId)
                   return <Card key={index} card={played.card}></Card>;
               })}
             </div>
           </Styled.TeamPlayed>
-          <Styled.RightPlayed
-            style={{
-              transform: `rotate(-${Math.floor(
-                Math.random() * (120 - 55 + 1) + 55
-              )}deg)`,
-            }}
-          >
+          <Styled.RightPlayed>
             {gameState.playedCards.map((played, index) => {
               if (played.playerId === gameState[getOpponent()][1].playerId)
                 return <Card key={index} card={played.card}></Card>;
