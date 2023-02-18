@@ -10,12 +10,21 @@ const JoinRoom: React.FC = () => {
   const value = useContext(GameContext);
   const joinRoom = (e: any) => {
     e.preventDefault();
-    socket.emit("join", {
-      roomId: room,
-      name: nickname,
-      team: team,
-      playerId: nickname,
-    });
+    if (nickname !== '' && room !== '' &&
+      nickname !== "null" && room !== "null" &&
+      nickname !== null && room !== null &&
+      nickname !== undefined && room !== undefined &&
+      nickname !== "undefined" && room !== "undefined") {
+      socket.emit("join", {
+        roomId: room,
+        name: nickname,
+        team: team,
+        playerId: nickname,
+      });
+    } else {
+      setError("Nome da sala ou nickname inválidos");
+    }
+
   };
 
   socket.on("error-join", (data: string) => {

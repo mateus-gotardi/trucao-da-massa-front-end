@@ -22,20 +22,14 @@ export const GameTableStyles = styled.div<{ truco: boolean }>`
   justify-content: space-between;
   align-items: center;
   gap: 1rem;
-  overflow: hidden;
-  background: rgb(0, 140, 13);
-  background: radial-gradient(
-    circle,
-    rgba(0, 140, 13, 1) 0%,
-    rgba(3, 74, 0, 1) 100%
-  );
   padding: 2rem;
 `;
-export const Section = styled.section`
+export const Section = styled.section<{ alignItems?: string }>`
   display: flex;
   width: 100%;
   justify-content: space-between;
   padding: 0 5rem;
+  ${({ alignItems }) => alignItems && `align-items: ${alignItems};`}
 `;
 
 export const ConfigStyles = styled.section`
@@ -92,34 +86,43 @@ export const ConfigStyles = styled.section`
 `;
 
 export const ScoreStyles = styled.div`
-  width: 20rem;
-  height: 8rem;
-  display: flex;
-  align-items: flex-start;
-  justify-content: space-around;
-  padding: 1rem;
-  border-radius: 0.5rem;
-  font-weight: 600;
   color: white;
-  > div {
+  #score {
+    width: 20rem;
+    height: 8rem;
     display: flex;
-    flex-direction: column;
-    align-items: center;
-    > h1 {
-      font-size: 1rem;
-    }
-    > h3 {
-      margin: 0;
-      padding: 0;
-      height: 2.3rem;
+    flex-direction: row;
+    align-items: flex-start;
+    justify-content: space-around;
+    padding: 1rem;
+    border-radius: 0.5rem;
+    font-weight: 600;
+    
+    > div {
       display: flex;
-      justify-content: space-around;
+      flex-direction: column;
       align-items: center;
-      gap: 0.5rem;
+      > h1 {
+        font-size: 1rem;
+      }
+      > h3 {
+        margin: 0;
+        padding: 0;
+        height: 2.3rem;
+        display: flex;
+        justify-content: space-around;
+        align-items: center;
+        gap: 0.5rem;
+      }
+      > h4 {
+        font-size: 3.5rem;
+      }
     }
-    > h4 {
-      font-size: 3.5rem;
-    }
+  }
+  #turn{
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 `;
 
@@ -174,10 +177,21 @@ export const PlayerHand = styled.div`
   gap: 1rem;
 `;
 
-export const OtherPlayerHand = styled.div`
+export const OtherPlayerHand = styled.div<{ left?: boolean, right?: boolean }>`
   display: flex;
   margin-left: 5rem;
+  color: white;
   div {
     margin-left: -5rem;
   }
+  ${({ left }) => left && `
+   transform: rotate(90deg);
+   margin-bottom: -5rem;
+   margin-left: 0;
+  `}
+  ${({ right }) => right && `
+   transform: rotate(-90deg);
+   marginTop: -5rem;
+   marginLeft: 0;
+  `}
 `;

@@ -23,7 +23,7 @@ export default function Lobby() {
     if (data.status === true) {
       value.setPlayerState(data.player);
       value.setGameState(data.table);
-      router.push("/game");
+      router.replace("/game");
     } else {
       removeStateFromLocalStorage("playerState");
     }
@@ -39,17 +39,21 @@ export default function Lobby() {
 
 
 
-  socket.on("join", (data: { table: IGameState; player: IPlayer }) => {
+  socket.on("join", (data: { table: IGameState; player: IPlayer, team: 'team1' | 'team2' | null }) => {
     value.setGameState(data.table);
-    value.setPlayerState(data.player);
+    let newPlayer = data.player;
+    newPlayer.team = data.team
+    value.setPlayerState(newPlayer);
     let localState: ILocalPlayer = {
       hand: data.player.hand,
       name: data.player.name,
       playerId: data.player.playerId,
       roomId: data.table.tableId,
       team: data.player.team,
+      ready: data.player.ready,
     };
     saveStateInLocalStorage("playerState", localState);
+    router.replace("/game");
   });
 
   return (
@@ -58,12 +62,6 @@ export default function Lobby() {
       <JoinRoom />
       <Button available onClick={getRooms}>
         Get Rooms
-      </Button>
-      <Button available onClick={() => {
-        console.log(value.playerState)
-        console.log(value.gameState)
-      }}>
-        Get states
       </Button>
       <Link href="/game">Game</Link>
       <RoomsList rooms={rooms} />

@@ -13,6 +13,7 @@ export default function App({ Component, pageProps }: AppProps) {
     name: "",
     hand: [],
     team: null,
+    ready: false,
   });
   const [gameState, setGameState] = React.useState<IGameState>({
     tableId: "",
@@ -34,6 +35,7 @@ export default function App({ Component, pageProps }: AppProps) {
     lastTruco: "",
     manilha: "",
     gameStarted: false,
+    createdBy: "",
   });
 
   useEffect(() => {
@@ -53,16 +55,22 @@ export default function App({ Component, pageProps }: AppProps) {
   });
 
   socket.on("update", (data: IGameState) => {
+    console.log(data)
     setGameState(data);
     let newPlayerState = playerState;
+    let team: 'team1' | 'team2' | null = null;
     let searchPlayer
     if (data.team1.find((player) => player.playerId === playerState.playerId)) {
       searchPlayer = data.team1.find((player) => player.playerId === playerState.playerId);
+      team = 'team1'
     } else if (!searchPlayer) {
       searchPlayer = data.team2.find((player) => player.playerId === playerState.playerId);
+      team = 'team2'
     }
     if (searchPlayer) {
       newPlayerState.hand = searchPlayer.hand;
+      newPlayerState.ready = searchPlayer.ready;
+      newPlayerState.team = team;
       setPlayerState(newPlayerState);
     }
   })

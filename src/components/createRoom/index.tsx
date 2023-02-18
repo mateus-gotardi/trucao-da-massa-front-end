@@ -7,12 +7,20 @@ const CreateRoom: React.FC = () => {
   const [error, setError] = useState("");
   const createRoom = (e: any) => {
     e.preventDefault();
-    socket.emit("create", {
-      roomId: room,
-      name: nickname,
-      team: 1,
-      playerId: nickname,
-    });
+    if (nickname !== '' && room !== '' &&
+      nickname !== "null" && room !== "null" &&
+      nickname !== null && room !== null &&
+      nickname !== undefined && room !== undefined &&
+      nickname !== "undefined" && room !== "undefined") {
+      socket.emit("create", {
+        roomId: room,
+        name: nickname,
+        team: 1,
+        playerId: nickname,
+      });
+    } else {
+      setError("Nome da sala ou nickname inválidos");
+    }
   };
 
   socket.on("error-create", (data: string) => {

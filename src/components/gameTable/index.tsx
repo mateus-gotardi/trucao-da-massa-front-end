@@ -1,11 +1,13 @@
 import React, { useContext, useState } from "react";
-import { IGameState, IPlayer } from "utils/interfaces";
+import { IGameState, IPlayer, ITrucoCard } from "utils/interfaces";
 import { Button, Card, HiddenCard } from "..";
 import * as Styled from "./styles";
 import { ImExit } from "react-icons/im";
 import { BsQuestionLg, BsFillGearFill } from "react-icons/bs";
 import { GiCardPlay } from "react-icons/gi";
 import { GameContext } from "GameContext";
+import socket from "@/common/connection/webSocket";
+
 
 const ScoreBall: React.FC<{ fillColor: boolean }> = ({ fillColor }) => {
   return <Styled.ScoreBall fillColor={fillColor} />;
@@ -36,6 +38,13 @@ const GameTable: React.FC = () => {
       return "team1";
     }
   };
+  const getTeam = () => {
+    if (playerState.team === "team1") {
+      return "team1";
+    } else {
+      return "team2";
+    }
+  }
 
   const handleTruco = () => {
     switch (truco) {
@@ -61,59 +70,75 @@ const GameTable: React.FC = () => {
     }, 1000);
   };
 
+  const toggleReady = () => {
+    socket.emit("setready", { roomId: gameState.tableId, playerId: playerState.playerId });
+  }
+
+  const startGame = () => {
+    socket.emit("startgame", { roomId: gameState.tableId, playerId: playerState.playerId });
+  }
+
+  const playCard = (card: ITrucoCard) => {
+    socket.emit("playcard", { roomId: gameState.tableId, playerId: playerState.playerId, card });
+  }
+
   const partner = getPartner();
+
   return (
     <Styled.GameTableStyles truco={trucoShake}>
-      <Styled.Section
-        style={{
-          alignItems: "flex-start",
-        }}
-      >
+      <Styled.Section alignItems="flex-start">
         <Styled.ScoreStyles>
-          <div>
-            <h1>PONTOS</h1>
-            <h2>
-              NÓS: {playerState.team && gameState.score[playerState.team]}
-            </h2>
-            <h2>ELES: {gameState.score[getOpponent()]}</h2>
+          <div id='score'>
+            <div>
+              <h1>PONTOS</h1>
+              <h2>
+                NÓS: {gameState.score[getTeam()]}
+              </h2>
+              <h2>ELES: {gameState.score[getOpponent()]}</h2>
+            </div>
+            <div>
+              <h1>RODADA</h1>
+              <h3>
+                <ScoreBall
+                  fillColor={
+                    playerState.team
+                      ? gameState.partialScore[playerState.team] >= 1
+                      : false
+                  }
+                />
+                <ScoreBall
+                  fillColor={
+                    playerState.team
+                      ? gameState.partialScore[playerState.team] >= 2
+                      : false
+                  }
+                />
+                <ScoreBall
+                  fillColor={
+                    playerState.team
+                      ? gameState.partialScore[playerState.team] >= 3
+                      : false
+                  }
+                />
+              </h3>
+              <h3>
+                <ScoreBall fillColor={gameState.partialScore[getOpponent()] >= 1} />
+                <ScoreBall fillColor={gameState.partialScore[getOpponent()] >= 2} />
+                <ScoreBall fillColor={gameState.partialScore[getOpponent()] >= 3} />
+              </h3>
+            </div>
+            <div>
+              <h1>TENTOS</h1>
+              <h4>{gameState.points}</h4>
+            </div>
           </div>
-          <div>
-            <h1>RODADA</h1>
-            <h3>
-              <ScoreBall
-                fillColor={
-                  playerState.team
-                    ? gameState.partialScore[playerState.team] >= 1
-                    : false
-                }
-              />
-              <ScoreBall
-                fillColor={
-                  playerState.team
-                    ? gameState.partialScore[playerState.team] >= 2
-                    : false
-                }
-              />
-              <ScoreBall
-                fillColor={
-                  playerState.team
-                    ? gameState.partialScore[playerState.team] >= 3
-                    : false
-                }
-              />
-            </h3>
-            <h3>
-              <ScoreBall fillColor={gameState.partialScore[getOpponent()] >= 1} />
-              <ScoreBall fillColor={gameState.partialScore[getOpponent()] >= 2} />
-              <ScoreBall fillColor={gameState.partialScore[getOpponent()] >= 3} />
-            </h3>
+          <div id='turn'>
+            <h4>{gameState.turn === playerState.name? 'SUA VEZ': "VEZ DE " + gameState.turn}</h4>
           </div>
-          <div>
-            <h1>TENTOS</h1>
-            <h4>{truco}</h4>
-          </div>
+
         </Styled.ScoreStyles>
         <Styled.OtherPlayerHand>
+          <h4>{partner?.name}</h4>
           {partner?.hand.map((card, index) => {
             return <HiddenCard key={index}></HiddenCard>;
           })}
@@ -143,30 +168,39 @@ const GameTable: React.FC = () => {
       </Styled.Section>
 
       <Styled.Section>
-        <Styled.OtherPlayerHand
-          style={{
-            transform: `rotate(90deg)`,
-            marginBottom: "-5rem",
-            marginLeft: "0",
-          }}
-        >
-          {
-            gameState.gameStarted && <>
-              {playerState.team === "team1" ? (
-                <>
-                  {gameState.team2[0].hand.map((card, index) => {
-                    return <HiddenCard key={index}></HiddenCard>;
-                  })}
-                </>
-              ) : (
-                <>
-                  {gameState.team1[0].hand.map((card, index) => {
-                    return <HiddenCard key={index}></HiddenCard>;
-                  })}
-                </>
-              )}
+        <Styled.OtherPlayerHand left>
+
+          {playerState.team === "team1" ? (
+            <>
+              {gameState.team1[0]?.playerId === playerState.playerId && <>
+                <h4>{gameState.team2[1]?.name}</h4>
+                {gameState.team2[1]?.hand.map((card, index) => {
+                  return <HiddenCard key={index}></HiddenCard>;
+                })}
+              </>}
+              {gameState.team1[1]?.playerId === playerState.playerId && <>
+                <h4>{gameState.team2[0]?.name}</h4>
+                {gameState.team2[0]?.hand.map((card, index) => {
+                  return <HiddenCard key={index}></HiddenCard>;
+                })}
+              </>}
             </>
-          }
+          ) : (
+            <>
+              {gameState.team2[0]?.playerId === playerState.playerId && <>
+                <h4>{gameState.team1[0]?.name}</h4>
+                {gameState.team1[0]?.hand.map((card, index) => {
+                  return <HiddenCard key={index}></HiddenCard>;
+                })}
+              </>}
+              {gameState.team2[1]?.playerId === playerState.playerId && <>
+                <h4>{gameState.team1[1]?.name}</h4>
+                {gameState.team1[1]?.hand.map((card, index) => {
+                  return <HiddenCard key={index}></HiddenCard>;
+                })}
+              </>}
+            </>
+          )}
 
         </Styled.OtherPlayerHand>
         <Styled.PublicTable>
@@ -203,55 +237,75 @@ const GameTable: React.FC = () => {
             })}
           </Styled.RightPlayed>
         </Styled.PublicTable>
-        <Styled.OtherPlayerHand
-          style={{
-            transform: "rotate(-90deg)",
-            marginTop: "-5rem",
-            marginLeft: "0",
-          }}
-        >
-          {gameState.gameStarted && <>
-            {playerState.team === "team1" ? (
-              <>
-                {gameState.team2[1].hand.map((card, index) => {
+        <Styled.OtherPlayerHand right>
+
+
+          {playerState.team === "team1" ? (
+            <>{gameState.team1[0]?.playerId === playerState.playerId && <>
+              <h4>{gameState.team2[0]?.name}</h4>
+              {gameState.team2[0]?.hand.map((card, index) => {
+                return <HiddenCard key={index}></HiddenCard>;
+              })}
+            </>}
+              {gameState.team1[1]?.playerId === playerState.playerId && <>
+                <h4>{gameState.team2[1]?.name}</h4>
+                {gameState.team2[1]?.hand.map((card, index) => {
                   return <HiddenCard key={index}></HiddenCard>;
                 })}
-              </>
-            ) : (
-              <>
-                {gameState.team1[1].hand.map((card, index) => {
+              </>}
+            </>
+          ) : (
+            <>{gameState.team2[0]?.playerId === playerState.playerId && <>
+              <h4>{gameState.team1[1]?.name}</h4>
+              {gameState.team1[1]?.hand.map((card, index) => {
+                return <HiddenCard key={index}></HiddenCard>;
+              })}
+            </>}
+              {gameState.team2[1]?.playerId === playerState.playerId && <>
+                <h4>{gameState.team1[0]?.name}</h4>
+                {gameState.team1[0]?.hand.map((card, index) => {
                   return <HiddenCard key={index}></HiddenCard>;
                 })}
-              </>
-            )}
-          </>}
+              </>}
+            </>
+          )}
+
 
         </Styled.OtherPlayerHand>
       </Styled.Section>
-      <Styled.Section
-        style={{
-          alignItems: "flex-end",
-        }}
-      >
+      <Styled.Section alignItems="flex-end" >
         <Button onClick={() => { }} available>
           <GiCardPlay />
           <p>VIRAR</p>
         </Button>
         <Styled.PlayerHand>
           {playerState.hand.map((card, index) => {
-            return <Card card={card} key={index} activable></Card>;
+            return <Card card={card} key={index} activable onClick={()=>playCard(card)}></Card>;
           })}
         </Styled.PlayerHand>
-        <Button
-          onClick={handleTruco}
-          available={playerState.team !== gameState.lastTruco}
-        >
-          {truco === 1 && "TRUCO"}
-          {truco === 3 && "SEIS"}
-          {truco === 6 && "NOVE"}
-          {truco === 9 && "DOZE"}
-          {truco === 12 && "TRUCO"}
-        </Button>
+        {gameState.gameStarted ?
+          <Button
+            onClick={handleTruco}
+            available={playerState.team !== gameState.lastTruco && gameState.points<12}
+          >
+            {gameState.points === 1 && "TRUCO"}
+            {gameState.points === 3 && "SEIS"}
+            {gameState.points === 6 && "NOVE"}
+            {gameState.points === 9 && "DOZE"}
+            {gameState.points === 12 && "FIM DE JOGO"}
+          </Button> :
+          <div id='ready-toggler'>
+            {playerState.playerId === gameState.createdBy &&
+              <Button available onClick={startGame}>
+                INICIAR
+              </Button>}
+            <Button onClick={toggleReady} available>
+              {playerState.ready ? "CANCELAR" : "PRONTO"}
+            </Button>
+          </div>
+
+        }
+
       </Styled.Section>
     </Styled.GameTableStyles>
   );

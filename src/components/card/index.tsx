@@ -13,6 +13,7 @@ interface ICardProps {
   suitColor?: string;
   side?: boolean;
   activable?: boolean;
+  onClick?: () => void;
 }
 const isNumber = (value: string) => {
   return !isNaN(Number(value));
@@ -68,7 +69,7 @@ const MiddleOfCard: React.FC<ICardProps> = ({ card, suitColor }) => {
     );
 };
 
-const Card: React.FC<ICardProps> = ({ card, activable }) => {
+const Card: React.FC<ICardProps> = ({ card, activable, onClick }) => {
   const colorPicker = () => {
     switch (card.suit) {
       case "paus":
@@ -83,7 +84,7 @@ const Card: React.FC<ICardProps> = ({ card, activable }) => {
   };
   const suitColor = colorPicker();
   return (
-    <CardStyles colors={colors} activable={activable}>
+    <CardStyles colors={colors} activable={activable} onClick={onClick}>
       <CardSuit position="start">
         <div className="side">
           <CardValue color={suitColor}>

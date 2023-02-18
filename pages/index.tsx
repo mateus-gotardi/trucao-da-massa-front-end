@@ -20,6 +20,8 @@ export default function Home() {
       <Card card={{ value: "J", suit: "paus" }} />
       <Card card={{ value: "K", suit: "copas" }} />
       <Card card={{ value: "3", suit: "ouros" }} />
+      <Card card={{ value: "2", suit: "espadas" }} />
+      <Card card={{ value: "7", suit: "espadas" }} />
       <HiddenCard />
     </div>
   );

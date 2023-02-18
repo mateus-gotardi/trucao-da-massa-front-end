@@ -7,6 +7,7 @@ export interface IPlayerState {
   playerId: string;
   name: string;
   hand: ITrucoCard[];
+  ready: boolean;
 }
 
 export interface IPlayer extends IPlayerState {
@@ -41,6 +42,7 @@ export interface IGameState {
   playedCards: IPlayedCard[];
   lastTruco: string;
   gameStarted: boolean;
+  createdBy: string;
 }
 
 export interface IColorProps {

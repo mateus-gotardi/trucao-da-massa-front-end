@@ -5,7 +5,7 @@ interface RoomsListProps {
     rooms: String[];
 }
 
-const RoomsList: React.FC<RoomsListProps> = (props) => {
+const RoomsList: React.FC<RoomsListProps> = (props: { rooms: String[] }) => {
     return (<>
         <Styled.RoomsList>
             {props.rooms.map((room) => {
