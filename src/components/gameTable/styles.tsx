@@ -195,3 +195,5 @@ export const OtherPlayerHand = styled.div<{ left?: boolean, right?: boolean }>`
    marginLeft: 0;
   `}
 `;
+
+export const ModalStyles = styled.div``;

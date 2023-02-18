@@ -11,7 +11,9 @@ const CreateRoom: React.FC = () => {
       nickname !== "null" && room !== "null" &&
       nickname !== null && room !== null &&
       nickname !== undefined && room !== undefined &&
-      nickname !== "undefined" && room !== "undefined") {
+      nickname !== "undefined" && room !== "undefined" &&
+      nickname !== " " && room !== " " && nickname !== "draw" && room !== "draw"
+      ) {
       socket.emit("create", {
         roomId: room,
         name: nickname,
