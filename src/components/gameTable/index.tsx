@@ -8,6 +8,8 @@ import { GiCardPlay } from "react-icons/gi";
 import { GameContext } from "GameContext";
 import socket from "@/common/connection/webSocket";
 import TrucoModal from "./trucoModal";
+import ElevenHandModal from "./elevenHandModal";
+import InfoModal from "./infoModal";
 
 const ScoreBall: React.FC<{ fillColor: boolean }> = ({ fillColor }) => {
   return <Styled.ScoreBall fillColor={fillColor} />;
@@ -16,10 +18,14 @@ const ScoreBall: React.FC<{ fillColor: boolean }> = ({ fillColor }) => {
 const GameTable: React.FC = () => {
   const [trucoShake, setTrucoShake] = useState<boolean>(false);
   const [trucoModal, setTrucoModal] = useState<string>('');
+  const [elevenModal, setElevenModal] = useState<boolean>(false);
+  const [finished, setFinished] = useState<boolean>(false);
+  const [info, setInfo] = useState<string>('');
   const [trucoAsker, setTrucoAsker] = useState<string>('');
   const value = useContext(GameContext);
   const gameState: IGameState = value.gameState;
   const playerState: IPlayer = value.playerState;
+
 
 
   const getPartner = () => {
@@ -48,6 +54,24 @@ const GameTable: React.FC = () => {
     }
   }
 
+  socket.on('handofeleven', (data: { team: string }) => {
+    if (data.team === playerState.team) {
+      setElevenModal(true);
+    } else {
+      setInfo('O outro time esta decidindo se vai jogar ou não')
+    }
+  })
+  socket.on('playelevenres', (data: { message: string }) => {
+    setInfo(data.message)
+    setTimeout(() => {
+      setInfo('')
+    }, 3000);
+  })
+
+  socket.on('responsetruco', (data: { team: string, accept: boolean }) => {
+    setTrucoModal('')
+  })
+
   const handleTruco = () => {
     socket.emit("asktruco", { roomId: gameState.tableId, playerId: playerState.playerId });
   };
@@ -63,6 +87,8 @@ const GameTable: React.FC = () => {
       setTrucoModal("accept");
     } else if (data.team === playerState.team) {
       setTrucoModal("help");
+    } else {
+      setTrucoModal("ask");
     }
   })
 
@@ -82,7 +108,13 @@ const GameTable: React.FC = () => {
 
   return (
     <Styled.GameTableStyles truco={trucoShake}>
-      {trucoModal !== '' && <TrucoModal setModal={() => setTrucoModal('')} type={trucoModal} asker={trucoAsker}/>}
+      {trucoModal === 'accept' || trucoModal === 'help' && <TrucoModal setModal={() => setTrucoModal('')} type={trucoModal} asker={trucoAsker} />}
+      {elevenModal && <ElevenHandModal showModal={() => setElevenModal(false)} partnerHand={partner?.hand} myHand={playerState.hand} />}
+      {info !== '' && <InfoModal close={()=>setInfo('')}>{info}</InfoModal>}
+      {gameState.gameFinished && finished && <InfoModal close={()=>{setFinished(false)}}>
+        <h2>{gameState.winner}</h2>
+        <h3>Placar: {gameState.score.team1} X {gameState.score.team2}</h3>
+      </InfoModal>}
       <Styled.Section alignItems="flex-start">
         <Styled.ScoreStyles>
           <div id='score'>
@@ -284,12 +316,12 @@ const GameTable: React.FC = () => {
           <Button
             onClick={handleTruco}
             available={playerState.team !== gameState.lastTruco && gameState.points < 12}
-          >
-            {gameState.points === 1 && "TRUCO"}
-            {gameState.points === 3 && "SEIS"}
-            {gameState.points === 6 && "NOVE"}
-            {gameState.points === 9 && "DOZE"}
-            {gameState.points === 12 && "FIM DE JOGO"}
+          >{gameState.elevenHand && "TRUCO"}
+            {!gameState.elevenHand && gameState.points === 1 && "TRUCO"}
+            {!gameState.elevenHand && gameState.points === 3 && "SEIS"}
+            {!gameState.elevenHand && gameState.points === 6 && "NOVE"}
+            {!gameState.elevenHand && gameState.points === 9 && "DOZE"}
+            {!gameState.elevenHand && gameState.points === 12 && "FIM DE JOGO"}
           </Button> :
           <div id='ready-toggler'>
             {playerState.playerId === gameState.createdBy &&

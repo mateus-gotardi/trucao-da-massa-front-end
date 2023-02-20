@@ -35,13 +35,13 @@ const TrucoModal: React.FC<{ setModal: () => void, type: string, asker: string }
     socket.on('helpfriend', (data: { accept: 'yes' | 'no' | 'bet' }) => {
         switch (data.accept) {
             case 'yes':
-                setPartnerHelp('Seu parceiro quer aceitar o truco')
+                setPartnerHelp('Seu parceiro disse para aceitar o truco')
                 break;
             case 'no':
-                setPartnerHelp('Seu parceiro quer recusar o truco')
+                setPartnerHelp('Seu parceiro disse para recusar o truco')
                 break;
             case 'bet':
-                setPartnerHelp('Seu parceiro quer aumentar a aposta')
+                setPartnerHelp('Seu parceiro disse para aumentar a aposta')
                 break;
         }
     })
@@ -49,8 +49,13 @@ const TrucoModal: React.FC<{ setModal: () => void, type: string, asker: string }
     return (
         <ModalStyles>
 
-            {type === 'accept' && <h4>Oponente pediu truco, aceitar?</h4> ||
-                type === 'help' && <h4>Dê uma dica para o seu parceiro</h4>}
+            <h4>Oponente pediu {
+                gameState.points === 1 && "truco"
+                || gameState.points === 3 && "seis"
+                || gameState.points === 6 && "nove"
+                || gameState.points === 9 && "doze"
+            }</h4>
+            {type === 'help' && <h4>Dê uma dica para o seu parceiro</h4>}
             {partnerHelp !== '' && <h5>{partnerHelp}</h5>}
             <Button available onClick={() => handleAccept(true)}>ACEITAR</Button>
             <Button available onClick={() => handleAccept(false)}>RECUSAR</Button>

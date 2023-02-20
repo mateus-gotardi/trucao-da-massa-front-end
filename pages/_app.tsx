@@ -36,6 +36,9 @@ export default function App({ Component, pageProps }: AppProps) {
     manilha: "",
     gameStarted: false,
     createdBy: "",
+    elevenHand: false,
+    gameFinished: true,
+    winner: ''
   });
 
   useEffect(() => {

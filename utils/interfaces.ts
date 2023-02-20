@@ -43,6 +43,9 @@ export interface IGameState {
   lastTruco: string;
   gameStarted: boolean;
   createdBy: string;
+  elevenHand: boolean;
+  gameFinished: boolean;
+  winner: string;
 }
 
 export interface IColorProps {
