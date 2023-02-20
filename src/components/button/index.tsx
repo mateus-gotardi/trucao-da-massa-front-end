@@ -1,4 +1,5 @@
 import React from "react";
+import { colors } from "..";
 import { ButtonStyles } from "./styles";
 
 interface ButtonProps {
@@ -13,6 +14,7 @@ const Button: React.FC<ButtonProps> = ({ children, onClick, available }) => {
         available ? onClick() : console.log("not available");
       }}
       inactive={!available}
+      colors={colors}
     >
       {children}
     </ButtonStyles>

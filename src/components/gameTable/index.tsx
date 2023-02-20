@@ -1,4 +1,4 @@
-import React, { useContext, useState } from "react";
+import React, { useContext, useEffect, useState } from "react";
 import { IGameState, IPlayer, ITrucoCard } from "utils/interfaces";
 import { Button, Card, HiddenCard } from "..";
 import * as Styled from "./styles";
@@ -10,6 +10,7 @@ import socket from "@/common/connection/webSocket";
 import TrucoModal from "./trucoModal";
 import ElevenHandModal from "./elevenHandModal";
 import InfoModal from "./infoModal";
+import { useRouter } from "next/router";
 
 const ScoreBall: React.FC<{ fillColor: boolean }> = ({ fillColor }) => {
   return <Styled.ScoreBall fillColor={fillColor} />;
@@ -26,7 +27,13 @@ const GameTable: React.FC = () => {
   const gameState: IGameState = value.gameState;
   const playerState: IPlayer = value.playerState;
 
+  const router = useRouter();
 
+  useEffect(() => {
+    if (playerState.playerId === '') {
+      router.replace('/')
+    }
+  },[])
 
   const getPartner = () => {
     if (playerState.team === "team1") {
@@ -110,8 +117,8 @@ const GameTable: React.FC = () => {
     <Styled.GameTableStyles truco={trucoShake}>
       {trucoModal === 'accept' || trucoModal === 'help' && <TrucoModal setModal={() => setTrucoModal('')} type={trucoModal} asker={trucoAsker} />}
       {elevenModal && <ElevenHandModal showModal={() => setElevenModal(false)} partnerHand={partner?.hand} myHand={playerState.hand} />}
-      {info !== '' && <InfoModal close={()=>setInfo('')}>{info}</InfoModal>}
-      {gameState.gameFinished && finished && <InfoModal close={()=>{setFinished(false)}}>
+      {info !== '' && <InfoModal close={() => setInfo('')}>{info}</InfoModal>}
+      {gameState.gameFinished && finished && <InfoModal close={() => { setFinished(false) }}>
         <h2>{gameState.winner}</h2>
         <h3>Placar: {gameState.score.team1} X {gameState.score.team2}</h3>
       </InfoModal>}
@@ -162,7 +169,9 @@ const GameTable: React.FC = () => {
             </div>
           </div>
           <div id='turn'>
-            <h4>{gameState.turn === playerState.name ? 'SUA VEZ' : "VEZ DE " + gameState.turn}</h4>
+            {gameState.gameStarted &&
+              <h4>{gameState.turn === playerState.name ? 'SUA VEZ' : "VEZ DE " + gameState.turn}</h4>
+            }
           </div>
 
         </Styled.ScoreStyles>
@@ -191,7 +200,9 @@ const GameTable: React.FC = () => {
 
             <BsFillGearFill size={30} />
 
-            <ImExit size={30} />
+            <ImExit size={30} onClick={()=>{socket.emit('exit', {roomId: gameState.tableId, playerId: playerState.playerId})
+            router.push('/')
+          }}/>
           </section>
         </Styled.ConfigStyles>
       </Styled.Section>

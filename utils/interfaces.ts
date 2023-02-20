@@ -49,5 +49,5 @@ export interface IGameState {
 }
 
 export interface IColorProps {
-  colors: { black: string; red: string; white: string };
+  black: string; red: string; white: string, blue: string;
 }
