@@ -1,6 +1,6 @@
 import React, { useContext, useEffect, useState } from "react";
 import { IGameState, IPlayer, ITrucoCard } from "utils/interfaces";
-import { Button, Card, HiddenCard } from "..";
+import { Button, Card, colors, HiddenCard } from "..";
 import * as Styled from "./styles";
 import { ImExit } from "react-icons/im";
 import { BsQuestionLg, BsFillGearFill } from "react-icons/bs";
@@ -23,6 +23,7 @@ const GameTable: React.FC = () => {
   const [finished, setFinished] = useState<boolean>(false);
   const [info, setInfo] = useState<string>('');
   const [trucoAsker, setTrucoAsker] = useState<string>('');
+  const [hideCard, setHideCard] = useState<boolean>(false);
   const value = useContext(GameContext);
   const gameState: IGameState = value.gameState;
   const playerState: IPlayer = value.playerState;
@@ -33,7 +34,7 @@ const GameTable: React.FC = () => {
     if (playerState.playerId === '') {
       router.replace('/')
     }
-  },[])
+  }, [])
 
   const getPartner = () => {
     if (playerState.team === "team1") {
@@ -77,25 +78,30 @@ const GameTable: React.FC = () => {
 
   socket.on('responsetruco', (data: { team: string, accept: boolean }) => {
     setTrucoModal('')
+    setInfo('')
   })
 
   const handleTruco = () => {
-    socket.emit("asktruco", { roomId: gameState.tableId, playerId: playerState.playerId });
+    if (!gameState.waiting) {
+      socket.emit("asktruco", { roomId: gameState.tableId, playerId: playerState.playerId });
+    }
   };
 
   socket.on("acceptTruco", (data: { team: string, player: string, asker: string }) => {
     console.log(data)
+    console.log(playerState)
     setTrucoShake(true);
     setTimeout(() => {
       setTrucoShake(false);
     }, 1000);
     setTrucoAsker(data.asker);
-    if (data.team === playerState.team && data.player === playerState.playerId) {
+    if (data.player === playerState.playerId) {
       setTrucoModal("accept");
     } else if (data.team === playerState.team) {
       setTrucoModal("help");
     } else {
-      setTrucoModal("ask");
+      setTrucoModal('')
+      setInfo("Esperando resposta do outro time");
     }
   })
 
@@ -108,14 +114,42 @@ const GameTable: React.FC = () => {
   }
 
   const playCard = (card: ITrucoCard) => {
-    socket.emit("playcard", { roomId: gameState.tableId, playerId: playerState.playerId, card });
+    socket.emit("playcard", { roomId: gameState.tableId, playerId: playerState.playerId, card, hidden: hideCard });
+  }
+
+  const getLeftOpponent = () => {
+    switch (playerState.playerId) {
+      case gameState.team1[0]?.playerId:
+        return gameState.team2[1];
+      case gameState.team1[1]?.playerId:
+        return gameState.team2[0];
+      case gameState.team2[0]?.playerId:
+        return gameState.team1[0];
+      case gameState.team2[1]?.playerId:
+        return gameState.team1[1];
+    }
+  }
+  const getRightOpponent = () => {
+    switch (playerState.playerId) {
+      case gameState.team1[0]?.playerId:
+        return gameState.team2[0];
+      case gameState.team1[1]?.playerId:
+        return gameState.team2[1];
+      case gameState.team2[0]?.playerId:
+        return gameState.team1[1];
+      case gameState.team2[1]?.playerId:
+        return gameState.team1[0];
+    }
   }
 
   const partner = getPartner();
+  const leftOpponent = getLeftOpponent();
+  const rightOpponent = getRightOpponent();
+
 
   return (
     <Styled.GameTableStyles truco={trucoShake}>
-      {trucoModal === 'accept' || trucoModal === 'help' && <TrucoModal setModal={() => setTrucoModal('')} type={trucoModal} asker={trucoAsker} />}
+      {trucoModal !== '' && <TrucoModal setModal={() => setTrucoModal('')} type={trucoModal} asker={trucoAsker} />}
       {elevenModal && <ElevenHandModal showModal={() => setElevenModal(false)} partnerHand={partner?.hand} myHand={playerState.hand} />}
       {info !== '' && <InfoModal close={() => setInfo('')}>{info}</InfoModal>}
       {gameState.gameFinished && finished && <InfoModal close={() => { setFinished(false) }}>
@@ -181,7 +215,7 @@ const GameTable: React.FC = () => {
             return <HiddenCard key={index}></HiddenCard>;
           })}
         </Styled.OtherPlayerHand>
-        <Styled.ConfigStyles>
+        <Styled.ConfigStyles colors={colors}>
           <div>
             <Styled.Deck>
               <div className="vira">
@@ -200,54 +234,29 @@ const GameTable: React.FC = () => {
 
             <BsFillGearFill size={30} />
 
-            <ImExit size={30} onClick={()=>{socket.emit('exit', {roomId: gameState.tableId, playerId: playerState.playerId})
-            router.push('/')
-          }}/>
+            <ImExit size={30} onClick={() => {
+              socket.emit('exit', { roomId: gameState.tableId, playerId: playerState.playerId })
+              router.push('/')
+            }} />
           </section>
         </Styled.ConfigStyles>
       </Styled.Section>
 
       <Styled.Section>
         <Styled.OtherPlayerHand left>
-
-          {playerState.team === "team1" ? (
-            <>
-              {gameState.team1[0]?.playerId === playerState.playerId && <>
-                <h4>{gameState.team2[1]?.name}</h4>
-                {gameState.team2[1]?.hand.map((card, index) => {
-                  return <HiddenCard key={index}></HiddenCard>;
-                })}
-              </>}
-              {gameState.team1[1]?.playerId === playerState.playerId && <>
-                <h4>{gameState.team2[0]?.name}</h4>
-                {gameState.team2[0]?.hand.map((card, index) => {
-                  return <HiddenCard key={index}></HiddenCard>;
-                })}
-              </>}
-            </>
-          ) : (
-            <>
-              {gameState.team2[0]?.playerId === playerState.playerId && <>
-                <h4>{gameState.team1[0]?.name}</h4>
-                {gameState.team1[0]?.hand.map((card, index) => {
-                  return <HiddenCard key={index}></HiddenCard>;
-                })}
-              </>}
-              {gameState.team2[1]?.playerId === playerState.playerId && <>
-                <h4>{gameState.team1[1]?.name}</h4>
-                {gameState.team1[1]?.hand.map((card, index) => {
-                  return <HiddenCard key={index}></HiddenCard>;
-                })}
-              </>}
-            </>
-          )}
-
+          <h4>{leftOpponent?.name}</h4>
+          {leftOpponent?.hand.map((card, index) => {
+            return <HiddenCard key={index}></HiddenCard>;
+          })}
         </Styled.OtherPlayerHand>
         <Styled.PublicTable>
           <Styled.LeftPlayed>
             {gameState.playedCards.map((played, index) => {
-              if (played.playerId === gameState[getOpponent()][0].playerId)
-                return <Card key={index} card={played.card}></Card>;
+              if (played.playerId === leftOpponent?.playerId) {
+                if (played.card.value === 'hidden') {
+                  return <HiddenCard key={index}></HiddenCard>;
+                } else return <Card key={index} card={played.card}></Card>;
+              }
             })}
           </Styled.LeftPlayed>
           <Styled.TeamPlayed>
@@ -259,65 +268,46 @@ const GameTable: React.FC = () => {
                   gameState[playerState.team].filter(
                     (player) => player.playerId !== playerState.playerId
                   )[0].playerId
-                )
-                  return <Card key={index} card={played.card}></Card>;
+                ) {
+                  if (played.card.value === 'hidden') {
+                    return <HiddenCard key={index}></HiddenCard>;
+                  } else return <Card key={index} card={played.card}></Card>;
+                }
               })}
             </div>
             <div>
               {gameState.playedCards.map((played, index) => {
                 if (played.playerId === playerState.playerId)
-                  return <Card key={index} card={played.card}></Card>;
+                  if (played.card.value === 'hidden') {
+                    return <HiddenCard key={index}></HiddenCard>;
+                  } else return <Card key={index} card={played.card}></Card>;
               })}
             </div>
           </Styled.TeamPlayed>
           <Styled.RightPlayed>
             {gameState.playedCards.map((played, index) => {
-              if (played.playerId === gameState[getOpponent()][1].playerId)
-                return <Card key={index} card={played.card}></Card>;
+              if (played.playerId === rightOpponent?.playerId) {
+                if (played.card.value === 'hidden') {
+                  return <HiddenCard key={index}></HiddenCard>;
+                } else return <Card key={index} card={played.card}></Card>;
+              }
             })}
           </Styled.RightPlayed>
         </Styled.PublicTable>
         <Styled.OtherPlayerHand right>
-
-
-          {playerState.team === "team1" ? (
-            <>{gameState.team1[0]?.playerId === playerState.playerId && <>
-              <h4>{gameState.team2[0]?.name}</h4>
-              {gameState.team2[0]?.hand.map((card, index) => {
-                return <HiddenCard key={index}></HiddenCard>;
-              })}
-            </>}
-              {gameState.team1[1]?.playerId === playerState.playerId && <>
-                <h4>{gameState.team2[1]?.name}</h4>
-                {gameState.team2[1]?.hand.map((card, index) => {
-                  return <HiddenCard key={index}></HiddenCard>;
-                })}
-              </>}
-            </>
-          ) : (
-            <>{gameState.team2[0]?.playerId === playerState.playerId && <>
-              <h4>{gameState.team1[1]?.name}</h4>
-              {gameState.team1[1]?.hand.map((card, index) => {
-                return <HiddenCard key={index}></HiddenCard>;
-              })}
-            </>}
-              {gameState.team2[1]?.playerId === playerState.playerId && <>
-                <h4>{gameState.team1[0]?.name}</h4>
-                {gameState.team1[0]?.hand.map((card, index) => {
-                  return <HiddenCard key={index}></HiddenCard>;
-                })}
-              </>}
-            </>
-          )}
-
-
+          <h4>{rightOpponent?.name}</h4>
+          {rightOpponent?.hand.map((card, index) => {
+            return <HiddenCard key={index}></HiddenCard>;
+          })}
         </Styled.OtherPlayerHand>
       </Styled.Section>
       <Styled.Section alignItems="flex-end" >
-        <Button onClick={() => { }} available>
-          <GiCardPlay />
-          <p>VIRAR</p>
-        </Button>
+        {gameState.gameStarted && playerState.hand.length <= 2 && gameState.turn === playerState.playerId ? <>
+          <Button onClick={() => { setHideCard(!hideCard) }} available>
+            <GiCardPlay />
+            {hideCard ? <p>REVELAR</p> : <p>ESCONDER</p>}
+          </Button>
+        </> : <div id='placeholder'></div>}
         <Styled.PlayerHand>
           {playerState.hand.map((card, index) => {
             return <Card card={card} key={index} activable onClick={() => playCard(card)}></Card>;

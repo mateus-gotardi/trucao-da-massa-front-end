@@ -14,6 +14,7 @@ interface IMiddleProps {
 }
 interface ICardProps extends IColorProps {
   activable?: boolean;
+  colors: IColorProps;
 }
 
 export const CardStyles = styled.div<ICardProps>`
@@ -25,7 +26,7 @@ export const CardStyles = styled.div<ICardProps>`
   border: 1px solid black;
   padding: 0.5rem 0.6rem;
   border-radius: 0.5rem;
-  box-shadow: 2px 2px 7px 0px rgba(0, 0, 0, 0.75);
+  box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
   user-select: none;
   overflow: none;
   background-color: ${({ colors }) => colors.white};
@@ -34,12 +35,14 @@ export const CardStyles = styled.div<ICardProps>`
     activable &&
     css`
       cursor: pointer;
-      &:active {
-        transform: scale(1.05);
-      }
       &:hover {
         position: relative;
-        top: -.6rem;
+        transform: scale(1.02);
+        box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+      }
+      &:active {
+        transform: scale(1.05);
+        box-shadow: 5px 7px 0px 0px rgba(0,0,0,1);
       }
     `}
 `;

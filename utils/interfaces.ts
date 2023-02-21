@@ -46,6 +46,7 @@ export interface IGameState {
   elevenHand: boolean;
   gameFinished: boolean;
   winner: string;
+  waiting: boolean;
 }
 
 export interface IColorProps {

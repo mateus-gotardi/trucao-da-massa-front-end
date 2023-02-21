@@ -38,7 +38,8 @@ export default function App({ Component, pageProps }: AppProps) {
     createdBy: "",
     elevenHand: false,
     gameFinished: true,
-    winner: ''
+    winner: '',
+    waiting: true
   });
 
   useEffect(() => {

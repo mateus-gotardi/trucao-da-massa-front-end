@@ -1,4 +1,4 @@
-import React, { useState, useEffect, useContext } from "react";
+import React, { useState, useContext } from "react";
 import { GameContext } from "GameContext";
 import Button from "../button";
 import { ModalStyles } from "./styles";
