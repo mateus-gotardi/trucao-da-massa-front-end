@@ -146,14 +146,19 @@ const GameTable: React.FC = () => {
   const leftOpponent = getLeftOpponent();
   const rightOpponent = getRightOpponent();
 
+  socket.on('update', (data:any)=>{
+    if (data.gameFinished) {
+      setFinished(true)
+    }
+  })
 
   return (
     <Styled.GameTableStyles truco={trucoShake}>
       {trucoModal !== '' && <TrucoModal setModal={() => setTrucoModal('')} type={trucoModal} asker={trucoAsker} />}
       {elevenModal && <ElevenHandModal showModal={() => setElevenModal(false)} partnerHand={partner?.hand} myHand={playerState.hand} />}
-      {info !== '' && <InfoModal close={() => setInfo('')}>{info}</InfoModal>}
+      {info !== '' && <InfoModal close={() => setInfo('')}><h3>{info}</h3></InfoModal>}
       {gameState.gameFinished && finished && <InfoModal close={() => { setFinished(false) }}>
-        <h2>{gameState.winner}</h2>
+        <h2>Vencedor: {gameState.winner}</h2>
         <h3>Placar: {gameState.score.team1} X {gameState.score.team2}</h3>
       </InfoModal>}
       <Styled.Section alignItems="flex-start">
@@ -203,7 +208,7 @@ const GameTable: React.FC = () => {
             </div>
           </div>
           <div id='turn'>
-            {gameState.gameStarted &&
+            {gameState.gameStarted && gameState.playedCards.length !== 4 &&
               <h4>{gameState.turn === playerState.name ? 'SUA VEZ' : "VEZ DE " + gameState.turn}</h4>
             }
           </div>
@@ -316,7 +321,7 @@ const GameTable: React.FC = () => {
         {gameState.gameStarted ?
           <Button
             onClick={handleTruco}
-            available={playerState.team !== gameState.lastTruco && gameState.points < 12}
+            available={playerState.playerId !== gameState.lastTruco && partner?.playerId !== gameState.lastTruco && gameState.points < 12}
           >{gameState.elevenHand && "TRUCO"}
             {!gameState.elevenHand && gameState.points === 1 && "TRUCO"}
             {!gameState.elevenHand && gameState.points === 3 && "SEIS"}

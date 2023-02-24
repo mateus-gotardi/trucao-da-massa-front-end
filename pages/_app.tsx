@@ -59,7 +59,6 @@ export default function App({ Component, pageProps }: AppProps) {
   });
 
   socket.on("update", (data: IGameState) => {
-    console.log(data)
     setGameState(data);
     let newPlayerState = playerState;
     let team: 'team1' | 'team2' | null = null;

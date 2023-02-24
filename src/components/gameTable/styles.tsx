@@ -5,7 +5,7 @@ export const GameTableStyles = styled.div<{ truco: boolean }>`
   transform-origin: bottom;
   transform-box: fill-box;
   @media (max-width: 500px) {
-    padding: 0;
+    padding: 1rem 0;
   }
   @keyframes shake {
     from {
@@ -21,9 +21,10 @@ export const GameTableStyles = styled.div<{ truco: boolean }>`
     animation: shake 0.07s ease-in-out infinite alternate;  `}
   display: flex;
   flex-direction: column;
-  width: 100%;
-  height: 100%;
-  justify-content: space-between;
+  width: 100vw;
+  height: 100vh;
+  height: 100svh;
+  justify-content: space-around;
   align-items: center;
   gap: 1rem;
   padding: 2rem;
@@ -36,7 +37,11 @@ export const Section = styled.section<{ alignItems?: string }>`
   align-items: center;
   ${({ alignItems }) => alignItems && `align-items: ${alignItems};`}
   #placeholder{
-    width:12rem;
+    width:13rem;
+
+  }
+  @media (max-width: 750px) {
+    zoom: 0.7;
   }
 `;
 
@@ -50,6 +55,7 @@ export const ConfigStyles = styled.section<{ colors: IColorProps }>`
   color: white;
   @media (max-width: 1000px) {
     >section {flex-direction: column;}
+    width: 9rem;
   }
   > section {
     display: flex;
@@ -77,8 +83,10 @@ export const ConfigStyles = styled.section<{ colors: IColorProps }>`
 
 export const ScoreStyles = styled.div`
   color: white;
+  display: flex;
+  flex-direction: column;
   #score {
-    width: 20rem;
+    width: 18rem;
     height: 8rem;
     display: flex;
     flex-direction: row;
@@ -106,12 +114,21 @@ export const ScoreStyles = styled.div`
       > h4 {
         font-size: 3.5rem;
       }
+      > h2 {
+        font-size: 1.5rem;
+      }
     }
   }
   #turn{
     display: flex;
     align-items: center;
     justify-content: center;
+    >h4{
+      font-size: 1rem;
+    }
+  }
+  @media (max-width: 1000px) {
+    zoom: 0.7;
   }
 `;
 
@@ -190,8 +207,17 @@ export const OtherPlayerHand = styled.div<{ left?: boolean, right?: boolean }>`
     height: fit-content;
     z-index: 14;
   };
-  @media (max-width: 500px) {
+  @media (max-width: 700px) {
     > div {display:none;}
+    align-items: center;
+    justify-content: center;
+    height: 9.6rem;
+    ${({ left }) => left && `
+   align-items: flex-start;
+  `}
+  ${({ right }) => right && `
+   align-items: flex-start;`
+  }
   }
   ${({ left }) => left && `
    transform: rotate(90deg);
@@ -203,8 +229,32 @@ export const OtherPlayerHand = styled.div<{ left?: boolean, right?: boolean }>`
   `}
 `;
 
-export const ModalStyles = styled.div``;
+export const ModalStyles = styled.div<{ colors: IColorProps }>`
+  position: absolute;
+  z-index: 999;
+  background-color: ${({ colors }) => colors.white};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 3px 3px 0px 0px rgba(0,0,0,1);
+  > h2 {
+    font-size: 1.5rem;
+  }
+  > h3 {
+    font-size: 1.2rem;
+  }
+  > h4 {
+    font-size: 1rem;
+  }
+  h1, h2, h3, h4 {
+    text-align: center;
+  }
+`;
 
 export const ElevenModal = styled.div``;
-
-export const InfoModalStyles = styled.div``;

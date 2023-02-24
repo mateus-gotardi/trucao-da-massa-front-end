@@ -3,6 +3,7 @@ import { GameContext } from "GameContext";
 import Button from "../button";
 import { ModalStyles } from "./styles";
 import socket from "@/common/connection/webSocket";
+import { colors } from "..";
 
 
 const TrucoModal: React.FC<{ setModal: () => void, type: string, asker: string }> = ({ setModal, type, asker }) => {
@@ -47,16 +48,16 @@ const TrucoModal: React.FC<{ setModal: () => void, type: string, asker: string }
     })
 
     return (
-        <ModalStyles>
+        <ModalStyles colors={colors}>
 
-            <h4>Oponente pediu {
+            <h2>Oponente pediu {
                 gameState.points === 1 && "truco"
                 || gameState.points === 3 && "seis"
                 || gameState.points === 6 && "nove"
                 || gameState.points === 9 && "doze"
-            }</h4>
-            {type === 'help' && <h4>Dê uma dica para o seu parceiro</h4>}
-            {partnerHelp !== '' && <h5>{partnerHelp}</h5>}
+            }</h2>
+            {type === 'help' && <h3>Dê uma dica para o seu parceiro</h3>}
+            {partnerHelp !== '' && <h4>{partnerHelp}</h4>}
             <Button available onClick={() => handleAccept(true)}>ACEITAR</Button>
             <Button available onClick={() => handleAccept(false)}>RECUSAR</Button>
             {gameState.points < 7 &&
