@@ -4,9 +4,6 @@ import { IColorProps } from "utils/interfaces";
 export const GameTableStyles = styled.div<{ truco: boolean }>`
   transform-origin: bottom;
   transform-box: fill-box;
-  @media (max-width: 500px) {
-    padding: 1rem 0;
-  }
   @keyframes shake {
     from {
       transform: scale(1);
@@ -27,7 +24,6 @@ export const GameTableStyles = styled.div<{ truco: boolean }>`
   justify-content: space-around;
   align-items: center;
   gap: 1rem;
-  padding: 2rem;
 `;
 export const Section = styled.section<{ alignItems?: string }>`
   display: flex;
@@ -39,6 +35,10 @@ export const Section = styled.section<{ alignItems?: string }>`
   #placeholder{
     width:13rem;
 
+  }
+  @media (max-width: 800px) {
+    zoom: 0.8;
+    padding:0 .5rem;
   }
   @media (max-width: 750px) {
     zoom: 0.7;
@@ -144,6 +144,7 @@ export const ScoreBall = styled.span<{ fillColor: boolean }>`
 export const Deck = styled.div`
   display: flex;
   z-index: 100;
+  margin-top: 1rem;
   .monte {
     display: flex;
     margin-left: 2rem;
@@ -156,6 +157,12 @@ export const Deck = styled.div`
     transform: rotate(-40deg);
     z-index:98;
   }
+  @media (max-width: 600px) {
+    .vira{
+      transform: rotate(-30deg);
+    }
+    margin-top: 3rem;
+  }
 `;
 
 export const PublicTable = styled.div`
@@ -166,12 +173,18 @@ export const PublicTable = styled.div`
   width: 45rem;
 `;
 export const LeftPlayed = styled.div`
-transform: rotate(${Math.floor(Math.random() * (120 - 55 + 1) + 55)}deg);
 min-width: 9.6rem;
+transform: rotate(90deg);
+@media (min-width: 600px){
+  transform: rotate(${Math.floor(Math.random() * (120 - 55 + 1) + 55)}deg);
+}
 `;
 export const RightPlayed = styled.div`
-transform: rotate(-${Math.floor(Math.random() * (120 - 55 + 1) + 55)}deg);
 min-width: 9.6rem;
+transform: rotate(-90deg);
+@media (min-width: 600px){
+  transform: rotate(-${Math.floor(Math.random() * (120 - 55 + 1) + 55)}deg);
+}
 `;
 export const TeamPlayed = styled.div`
   display: flex;
@@ -179,7 +192,9 @@ export const TeamPlayed = styled.div`
   gap: 0.5rem;
   > div {
     height: 9.6rem;
-    transform: rotate(-${Math.floor(Math.random() * (30 - -30 + 1) + -30)}deg);
+    @media (min-width: 600px){
+      transform: rotate(-${Math.floor(Math.random() * (30 - -30 + 1) + -30)}deg);
+    }
   }
   min-height: 9.6rem;
 `;
@@ -190,40 +205,38 @@ export const PlayerHand = styled.div`
   min-height: 9.6rem;
 `;
 
-export const OtherPlayerHand = styled.div<{ left?: boolean, right?: boolean }>`
+export const OtherPlayerHand = styled.div<{ side?: string, colors: IColorProps }>`
   display: flex;
-  align-items: flex-start;
-  justify-content: flex-end;
-  color: white;
-  width: 9.2rem;
-  height: fit-content;
-  margin: 0 1.5rem;
-  div {
-    margin-top: 1.6rem;
-    margin-left: -5rem;
-  };
-  h4{
-    width: fit-content;
-    height: fit-content;
-    z-index: 14;
-  };
-  @media (max-width: 700px) {
-    > div {display:none;}
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  width: 14.4rem;
+  color: ${({ colors }) => colors.white};
+  #cards {
+    display: flex;
     align-items: center;
     justify-content: center;
-    height: 9.6rem;
-    ${({ left }) => left && `
-   align-items: flex-start;
-  `}
-  ${({ right }) => right && `
-   align-items: flex-start;`
+    width: 14.4rem;
+    padding-left: 4rem;
+    > div{
+      margin-left: -4rem;
+    }
+    :first-child{
+      margin-left: 0;
+    }
   }
+
+  @media (max-width: 580px) {
+    #cards {
+      display: none;
+      width:2rem;
+    }
   }
-  ${({ left }) => left && `
+  ${({ side }) => side === 'left' && `
    transform: rotate(90deg);
    margin: 0;
   `}
-  ${({ right }) => right && `
+  ${({ side }) => side === 'right' && `
    transform: rotate(-90deg);
    margin: 0;
   `}
@@ -257,4 +270,18 @@ export const ModalStyles = styled.div<{ colors: IColorProps }>`
   }
 `;
 
-export const ElevenModal = styled.div``;
+export const ElevenModal = styled.div<{ colors: IColorProps }>`
+position: absolute;
+  z-index: 999;
+  background-color: ${({ colors }) => colors.white};
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  box-shadow: 3px 3px 0px 0px rgba(0,0,0,1);
+`;

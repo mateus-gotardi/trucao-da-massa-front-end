@@ -5,6 +5,7 @@ import Card from "../card";
 import { ElevenModal } from "./styles";
 import { GameContext } from "GameContext";
 import socket from "@/common/connection/webSocket";
+import { colors } from "..";
 
 const ElevenHandModal: React.FC<{ partnerHand: ITrucoCard[]|undefined, myHand: ITrucoCard[], showModal: () => void }> = ({ partnerHand, myHand, showModal }) => {
     const value = useContext(GameContext);
@@ -25,7 +26,7 @@ const ElevenHandModal: React.FC<{ partnerHand: ITrucoCard[]|undefined, myHand: I
     })
 
     return (
-        <ElevenModal>
+        <ElevenModal colors = {colors}>
             <h3>Mão de Onze</h3>
             <h4>Escolha se vai jogar ou não</h4>
             <h4>{info}</h4>

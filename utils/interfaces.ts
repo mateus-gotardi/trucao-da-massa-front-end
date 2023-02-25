@@ -49,6 +49,11 @@ export interface IGameState {
   waiting: boolean;
 }
 
+export interface IRoomDetails {
+  roomId: string;
+  players: number;
+}
+
 export interface IColorProps {
   black: string; red: string; white: string, blue: string;
 }

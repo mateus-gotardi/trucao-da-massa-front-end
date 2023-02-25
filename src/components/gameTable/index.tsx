@@ -11,6 +11,7 @@ import TrucoModal from "./trucoModal";
 import ElevenHandModal from "./elevenHandModal";
 import InfoModal from "./infoModal";
 import { useRouter } from "next/router";
+import OtherPlayer from "./otherPlayer";
 
 const ScoreBall: React.FC<{ fillColor: boolean }> = ({ fillColor }) => {
   return <Styled.ScoreBall fillColor={fillColor} />;
@@ -78,7 +79,30 @@ const GameTable: React.FC = () => {
 
   socket.on('responsetruco', (data: { team: string, accept: boolean }) => {
     setTrucoModal('')
-    setInfo('')
+    if (data.team !== playerState.team) {
+      data.accept ? setInfo('O outro time aceitou o truco!') : setInfo('O outro time recusou o truco!')
+      setTimeout(() => { setInfo('') }, 4000);
+    }
+    else setInfo('')
+  })
+
+  socket.on('closeroom', (data: { status: boolean, message: string }) => {
+    if (data.status) {
+      setInfo(data.message)
+      setTimeout(() => {
+        router.replace('/')
+      }, 10000);
+    }
+  })
+
+  socket.on('kickplayer', (data:{playerId: string})=>{
+    if (playerState.playerId === data.playerId){
+      socket.emit('unsubscribe', { roomId: gameState.tableId, playerId: playerState.playerId })
+      setInfo('Você foi expulso da sala!')
+      setTimeout(() => {
+        router.replace('/')
+      }, 7000);
+    }
   })
 
   const handleTruco = () => {
@@ -88,8 +112,7 @@ const GameTable: React.FC = () => {
   };
 
   socket.on("acceptTruco", (data: { team: string, player: string, asker: string }) => {
-    console.log(data)
-    console.log(playerState)
+    setInfo('')
     setTrucoShake(true);
     setTimeout(() => {
       setTrucoShake(false);
@@ -115,6 +138,7 @@ const GameTable: React.FC = () => {
 
   const playCard = (card: ITrucoCard) => {
     socket.emit("playcard", { roomId: gameState.tableId, playerId: playerState.playerId, card, hidden: hideCard });
+    setHideCard(false);
   }
 
   const getLeftOpponent = () => {
@@ -146,7 +170,7 @@ const GameTable: React.FC = () => {
   const leftOpponent = getLeftOpponent();
   const rightOpponent = getRightOpponent();
 
-  socket.on('update', (data:any)=>{
+  socket.on('update', (data: any) => {
     if (data.gameFinished) {
       setFinished(true)
     }
@@ -214,12 +238,7 @@ const GameTable: React.FC = () => {
           </div>
 
         </Styled.ScoreStyles>
-        <Styled.OtherPlayerHand>
-          <h4>{partner?.name}</h4>
-          {partner?.hand.map((card, index) => {
-            return <HiddenCard key={index}></HiddenCard>;
-          })}
-        </Styled.OtherPlayerHand>
+        <OtherPlayer side='middle' player={partner} />
         <Styled.ConfigStyles colors={colors}>
           <div>
             <Styled.Deck>
@@ -248,12 +267,7 @@ const GameTable: React.FC = () => {
       </Styled.Section>
 
       <Styled.Section>
-        <Styled.OtherPlayerHand left>
-          <h4>{leftOpponent?.name}</h4>
-          {leftOpponent?.hand.map((card, index) => {
-            return <HiddenCard key={index}></HiddenCard>;
-          })}
-        </Styled.OtherPlayerHand>
+        <OtherPlayer side='left' player={leftOpponent}/>
         <Styled.PublicTable>
           <Styled.LeftPlayed>
             {gameState.playedCards.map((played, index) => {
@@ -299,12 +313,7 @@ const GameTable: React.FC = () => {
             })}
           </Styled.RightPlayed>
         </Styled.PublicTable>
-        <Styled.OtherPlayerHand right>
-          <h4>{rightOpponent?.name}</h4>
-          {rightOpponent?.hand.map((card, index) => {
-            return <HiddenCard key={index}></HiddenCard>;
-          })}
-        </Styled.OtherPlayerHand>
+        <OtherPlayer side='right' player={rightOpponent} />
       </Styled.Section>
       <Styled.Section alignItems="flex-end" >
         {gameState.gameStarted && playerState.hand.length <= 2 && gameState.turn === playerState.playerId ? <>

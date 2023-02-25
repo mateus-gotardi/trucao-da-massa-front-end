@@ -1,8 +1,8 @@
-import React, { useContext, useEffect } from "react";
-import { Button, CreateRoom, JoinRoom, RoomsList } from "@/components";
+import React, { useContext, useEffect, useState } from "react";
+import { Button, RoomsList } from "@/components";
 import socket from "@/common/connection/webSocket";
 import Link from "next/link";
-import { IGameState, ILocalPlayer, IPlayer } from "utils/interfaces";
+import { IGameState, ILocalPlayer, IPlayer, IRoomDetails } from "utils/interfaces";
 import { GameContext } from "GameContext";
 import { getStateFromLocalStorage, removeStateFromLocalStorage, saveStateInLocalStorage } from "utils/functions";
 import { useRouter } from "next/router";
@@ -10,13 +10,18 @@ import { useRouter } from "next/router";
 export default function Lobby() {
   const value = useContext(GameContext);
   const router = useRouter();
-  const [rooms, setRooms] = React.useState<Array<String>>([]);
+  const [rooms, setRooms] = useState<Array<IRoomDetails>>([]);
+  const [room, setRoom] = useState("");
+  const [nickname, setNickname] = useState("");
+  const [team, setTeam] = useState(1);
+  const [error, setError] = useState("");
 
   useEffect(() => {
     let localState: ILocalPlayer = getStateFromLocalStorage("playerState");
     if (localState) {
       socket.emit("setupconnection", localState);
     }
+    socket.emit("getrooms", {});
   }, []);
 
   socket.on("setupconnection", (data: any) => {
@@ -29,11 +34,7 @@ export default function Lobby() {
     }
   })
 
-  const getRooms = () => {
-    socket.emit("getrooms", {});
-  };
   socket.on("getrooms", (data: any) => {
-    console.log(data);
     setRooms(data);
   });
 
@@ -56,15 +57,59 @@ export default function Lobby() {
     router.replace("/game");
   });
 
+  const joinRoom = (type: 'create' | 'join', roomId: string) => {
+    if (nickname !== '' && roomId !== '' &&
+      nickname !== "null" && roomId !== "null" &&
+      nickname !== null && roomId !== null &&
+      nickname !== undefined && roomId !== undefined &&
+      nickname !== "undefined" && roomId !== "undefined" &&
+      nickname !== " " && roomId !== " " &&
+      nickname !== "draw" && roomId !== "draw" && 
+      nickname !== "bot" && nickname !== "Bot") {
+      socket.emit(type, {
+        roomId: roomId,
+        name: nickname,
+        team: team,
+        playerId: nickname,
+      });
+    } else {
+      setError("Nome da sala ou nickname inválidos");
+    }
+
+  };
+
+  socket.on('error-join', (data: string) => {
+    console.log(data)
+    setError(data);
+  })
+  socket.on('error-create', (data: string) => {
+    setError(data);
+  })
+
   return (
     <>
-      <CreateRoom />
-      <JoinRoom />
-      <Button available onClick={getRooms}>
-        Get Rooms
-      </Button>
-      <Link href="/game">Game</Link>
-      <RoomsList rooms={rooms} />
+      <input
+        type="text"
+        placeholder="Nome da Sala"
+        value={room}
+        onChange={(e) => setRoom(e.target.value)}
+        required
+      />
+      <input
+        type="text"
+        placeholder="Nickname"
+        value={nickname}
+        onChange={(e) => setNickname(e.target.value)}
+        required
+      />
+      <select value={team} onChange={(e) => setTeam(Number(e.target.value))} required>
+        <option value={1}>Equipe 1</option>
+        <option value={2}>Equipe 2</option>
+      </select>
+      <h3>{error}</h3>
+      <Button available onClick={() => joinRoom('join', room)}>Entrar</Button>
+      <Button available onClick={() => joinRoom('create', room)}>Criar</Button>
+      <RoomsList rooms={rooms} join = {joinRoom}/>
     </>
   );
 }

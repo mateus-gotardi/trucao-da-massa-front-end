@@ -1,5 +1,6 @@
 import { Card, HiddenCard } from "../src/components";
 import { ITrucoCard } from "utils/interfaces";
+import Link from "next/link";
 
 export default function Home() {
   const sampleCard: ITrucoCard = {
@@ -23,6 +24,7 @@ export default function Home() {
       <Card card={{ value: "2", suit: "espadas" }} />
       <Card card={{ value: "7", suit: "espadas" }} />
       <HiddenCard />
+      <Link href='/lobby'>Lobby</Link>
     </div>
   );
 }

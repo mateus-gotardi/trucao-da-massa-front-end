@@ -76,6 +76,7 @@ export default function App({ Component, pageProps }: AppProps) {
       newPlayerState.team = team;
       setPlayerState(newPlayerState);
     }
+    
   })
 
   return (
