@@ -15,5 +15,9 @@ export const GlobalStyle = createGlobalStyle`
             rgba(0, 140, 13, 1) 0%,
             rgba(3, 74, 0, 1) 100%
         );
+        user-select: none;
+        -moz-user-select: none;
+        -webkit-user-select: none;
+        -ms-user-select: none;
     }
 `;

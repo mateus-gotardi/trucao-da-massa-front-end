@@ -3,6 +3,8 @@ import HiddenCard from "./hiddenCard";
 import GameTable from "./gameTable";
 import Button from "./button";
 import RoomsList from "./roomList";
+import HomePage from "./homepage";
+import LobbyComponent from "./lobby";
 
 const colors = {
     black: "#111111",
@@ -11,4 +13,4 @@ const colors = {
     blue: "#303390",
 }
 
-export { Card, colors, HiddenCard, GameTable, Button, RoomsList };
+export { Card, colors, HiddenCard, GameTable, Button, RoomsList, HomePage, LobbyComponent };

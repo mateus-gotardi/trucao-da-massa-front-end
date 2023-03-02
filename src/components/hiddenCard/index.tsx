@@ -1,13 +1,15 @@
-import React from "react";
+import React, { useContext } from "react";
 import { HiddenStyle } from "./styles";
 import { colors } from "..";
+import {ScenarioContext} from "ScenarioContext";
 
 const HiddenCard: React.FC = () => {
-  const [back, setBack] = React.useState<string>("/figures/hidden.svg");
-
+  const value = useContext(ScenarioContext)
+  const { cardsImage } = value;
+  
   return (
     <HiddenStyle colors={colors}>
-      <img src={back} alt="carta virada" />
+      <img src={`/backofcard/${cardsImage}`} alt="carta virada" />
     </HiddenStyle>
   );
 };

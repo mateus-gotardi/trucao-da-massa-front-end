@@ -6,6 +6,9 @@ import { GameContext } from "GameContext";
 import { IGameState, ILocalPlayer, IPlayer } from "utils/interfaces";
 import socket from "@/common/connection/webSocket";
 import { getStateFromLocalStorage, removeStateFromLocalStorage } from "utils/functions";
+import ScenarioProvider from "ScenarioContext";
+import { useRouter } from "next/router";
+import Head from "next/head";
 
 export default function App({ Component, pageProps }: AppProps) {
   const [playerState, setPlayerState] = React.useState<IPlayer>({
@@ -49,10 +52,13 @@ export default function App({ Component, pageProps }: AppProps) {
     }
   }, []);
 
+  const router = useRouter();
+
   socket.on("setupconnection", (data: any) => {
     if (data.status === true) {
       setPlayerState(data.player);
       setGameState(data.table);
+      router.push("/game");
     } else {
       removeStateFromLocalStorage("playerState")
     }
@@ -76,7 +82,6 @@ export default function App({ Component, pageProps }: AppProps) {
       newPlayerState.team = team;
       setPlayerState(newPlayerState);
     }
-    
   })
 
   return (
@@ -88,9 +93,16 @@ export default function App({ Component, pageProps }: AppProps) {
         setGameState,
       }}
     >
+      <ScenarioProvider>
+      <Head>
+        <title>Bar do Truco</title>
+        <meta name="description" content="Truco paulista online com os amigos" />
+        <link rel="icon" href="/favicon.ico" />
+      </Head>
       <GlobalStyle />
 
       <Component {...pageProps} />
+      </ScenarioProvider>
     </GameContext.Provider>
   );
 }

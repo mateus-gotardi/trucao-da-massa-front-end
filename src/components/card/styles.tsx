@@ -12,13 +12,20 @@ interface ICardValueProps {
 interface IMiddleProps {
   cardValue?: number;
 }
-interface ICardProps extends IColorProps {
+interface ICardProps {
   activable?: boolean;
   colors: IColorProps;
 }
 
 export const CardStyles = styled.div<ICardProps>`
-  width: 6.4rem;
+  @media (max-height: 850px) {
+    zoom: 0.8;
+  }
+  @media (max-width: 1400px) {
+    zoom: 0.8;
+  }
+  z-index: 2;
+  width: 6.7rem;
   height: 9.6rem;
   display: flex;
   justify-content: center;

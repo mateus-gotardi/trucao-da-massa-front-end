@@ -18,7 +18,9 @@ const Button: React.FC<ButtonProps> = ({ children, onClick, available, size = [1
       inactive={!available}
       colors={colors}
     >
-      {children}
+      <span id="transition"></span>
+      <span id="gradient"></span>
+      <span id="label">{children}</span>
     </ButtonStyles>
   );
 };
