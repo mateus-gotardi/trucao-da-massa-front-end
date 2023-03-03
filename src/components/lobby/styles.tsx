@@ -11,6 +11,9 @@ export const LobbyStyle = styled.div<{ colors: IColorProps }>`
     background-position: top;
     display: flex;
     #joinform{
+        border-radius: .8rem;
+        background-color: rgba(17, 17, 17, 0.7);
+        height: fit-content;
         padding: 1rem;
         color: ${({ colors }) => colors.white};
         display: flex;

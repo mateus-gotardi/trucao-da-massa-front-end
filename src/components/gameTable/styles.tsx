@@ -62,8 +62,8 @@ export const ConfigStyles = styled.section<{ colors: IColorProps }>`
     display: flex;
     gap: 1rem;
     svg {
-      background-color: ${({ colors }) => colors.blue};
-      box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+      background-color: ${({ colors }) => colors.black};
+      box-shadow: 2px 2px 0px 0px rgba(0,0,0,0.7);
       border-radius: 50%;
       width: 3rem;
       height: 3rem;
@@ -72,11 +72,11 @@ export const ConfigStyles = styled.section<{ colors: IColorProps }>`
       transition: all 0.2s ease-in-out;
       &:hover {
       transform: scale(1.05);
-      box-shadow: 6px 6px 0px 0px rgba(0,0,0,1);
+      box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.7);
     }
     &:active {
       transform: scale(1.01);
-      box-shadow: 3px 3px 0px 0px rgba(0,0,0,1);
+      box-shadow: 1px 1px 0px 0px rgba(0,0,0,1);
     }
     }
   }
@@ -103,8 +103,8 @@ export const ScoreStyles = styled.div<{ colors: IColorProps }>`
   width: fit-content;
   flex-direction: column;
   grid-area: 1 / 1 / 2 / 2;
-  background-color: ${({ colors }) => colors.blue};
-  box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+  background-color: rgba(17, 17, 17, 0.7);
+  box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.7);
   #score {
     width: 18rem;
     height: 8rem;
@@ -252,9 +252,13 @@ export const PublicTable = styled.div<{ truco: boolean }>`
     truco &&
     `  
     animation: shake 0.07s ease-in-out infinite alternate;  `}
+  @media (max-height: 800px) {
+    transform: translate(0, -3rem);
+  }
   @media (max-width: 720px) {
     grid-area: 2 / 1 / 4 / 4;
     zoom: 0.8;
+    transform: translate(0, -1rem);
   }
 `;
 export const Buttons = styled.div`
@@ -354,17 +358,26 @@ export const MyPlayed = styled.div`
 `
 
 export const PlayerHand = styled.div`
-  grid-area: 5 / 2 / 6 / 5;
+grid-area: 5 / 2 / 6 / 5;
+display: flex;
+align-items: center;
+justify-content: center;
+flex-direction: column;
+gap: .5rem;
+z-index: 40;
+>section{
   display: flex;
   align-items: center;
   justify-content: center;
   gap: 1rem;
   min-height: 9.6rem;
-  @media (max-width: 720px){
-    grid-area: 4 / 2 / 5 / 3;
-  }
   @media (max-width: 500px){
     zoom: 0.8;
+    gap: .2rem;
+  }
+}
+  @media (max-width: 720px){
+    grid-area: 4 / 2 / 5 / 3;
   }
 `;
 
@@ -382,11 +395,11 @@ export const OtherPlayerHand = styled.div<{ side?: string, colors: IColorProps }
   align-items: center;
   z-index: 7;
   > div > h4{
+    margin-bottom: .15rem;
     padding: .5rem 1rem 0 1rem;
     border-radius: 1rem;
     font-size: 1.2rem;
-    background-color: ${({ colors }) => colors.blue}
-    ;
+    background-color: rgba(17, 17, 17, 0.7);
   }
   > div { 
     display: flex;
@@ -540,6 +553,32 @@ export const ConfigModalStyles = styled.div<{ colors: IColorProps }>`
         color: ${({ colors }) => colors.white};
         text-shadow: 1px 1px 0px rgba(0,0,0,1);
       }
+    }
+  }
+`
+
+export const TimerStyles = styled.div<{ colors: IColorProps }>`
+  display: flex;
+  align-items: center;
+  justify-content: flex-start;
+  width: 10rem;
+  height: .5rem;
+  background-color: ${({ colors }) => colors.white};
+  border: 2px solid ${({ colors }) => colors.white};
+  border-radius: .5rem;
+  >div {
+    width: 0rem;
+    height: .4rem;
+    border-radius: .5rem;
+    background-color: ${({ colors }) => colors.black};
+    animation: grow 25s linear;
+  }
+  @keyframes grow {
+    0% {
+      width: 0rem;
+    }
+    100% {
+      width: 10rem;
     }
   }
 `

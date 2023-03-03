@@ -33,7 +33,7 @@ export const CardStyles = styled.div<ICardProps>`
   border: 1px solid black;
   padding: 0.5rem 0.6rem;
   border-radius: 0.5rem;
-  box-shadow: 2px 2px 0px 0px rgba(0,0,0,1);
+  box-shadow: 2px 2px 5px 0px rgba(0,0,0,0.75);
   user-select: none;
   overflow: none;
   background-color: ${({ colors }) => colors.white};
@@ -45,11 +45,11 @@ export const CardStyles = styled.div<ICardProps>`
       &:hover {
         position: relative;
         transform: scale(1.02);
-        box-shadow: 4px 4px 0px 0px rgba(0,0,0,1);
+        box-shadow: 4px 4px 5px 0px rgba(0,0,0,0.75);
       }
       &:active {
         transform: scale(1.05);
-        box-shadow: 5px 7px 0px 0px rgba(0,0,0,1);
+        box-shadow: 5px 7px 5px 0px rgba(0,0,0,0.75);
       }
     `}
 `;

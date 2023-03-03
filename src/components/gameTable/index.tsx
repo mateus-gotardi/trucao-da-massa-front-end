@@ -4,7 +4,6 @@ import { Button, Card, colors, HiddenCard } from "..";
 import * as Styled from "./styles";
 import { ImExit } from "react-icons/im";
 import { BsQuestionLg, BsFillGearFill } from "react-icons/bs";
-import { GiCardPlay } from "react-icons/gi";
 import { GameContext } from "GameContext";
 import socket from "@/common/connection/webSocket";
 import TrucoModal from "./trucoModal";
@@ -33,6 +32,7 @@ const GameTable: React.FC = () => {
   let { tableImg, scenario } = scenarioCtx
   const gameState: IGameState = value.gameState;
   const playerState: IPlayer = value.playerState;
+
 
   const router = useRouter();
 
@@ -242,7 +242,7 @@ const GameTable: React.FC = () => {
         <section>
           <BsQuestionLg size={30} />
 
-          <BsFillGearFill size={30} onClick={()=>{setShowConfig(true)}}/>
+          <BsFillGearFill size={30} onClick={() => { setShowConfig(true) }} />
 
           <ImExit size={30} onClick={() => {
             socket.emit('exit', { roomId: gameState.tableId, playerId: playerState.playerId })
@@ -312,20 +312,22 @@ const GameTable: React.FC = () => {
 
       </Styled.Chat>
       <Styled.PlayerHand>
-        {playerState.hand.map((card, index) => {
-          return <Card card={card} key={index} activable onClick={() => playCard(card)}></Card>;
-        })}
+        <section>
+          {playerState.hand.map((card, index) => {
+            return <Card card={card} key={index} activable onClick={() => playCard(card)}></Card>;
+          })}
+        </section>
+        {gameState.turn === playerState.name && !gameState.waiting && <Styled.TimerStyles colors={colors}><div></div></Styled.TimerStyles>}
       </Styled.PlayerHand>
       <Styled.Buttons>
         {gameState.gameStarted ? <>
           {gameState.turn === playerState.playerId && <>
-            <Button onClick={() => { setHideCard(!hideCard) }} available size={[9,2.4]}>
-              <GiCardPlay />
-              {hideCard ? <p>REVELAR</p> : <p>ESCONDER</p>}
+            <Button onClick={() => { setHideCard(!hideCard) }} available size={[10, 3]}>
+              {hideCard ? 'REVELAR' : 'ESCONDER'}
             </Button>
           </>}
           <Button
-            size={[9,2.4]}
+            size={[10, 3]}
             onClick={handleTruco}
             available={playerState.playerId !== gameState.lastTruco && partner?.playerId !== gameState.lastTruco && gameState.points < 12}
           >{gameState.elevenHand && "TRUCO"}
@@ -339,10 +341,10 @@ const GameTable: React.FC = () => {
           :
           <div id='ready-toggler'>
             {playerState.playerId === gameState.createdBy &&
-              <Button available onClick={startGame} size={[6,3]}>
+              <Button available onClick={startGame} size={[9, 3]}>
                 INICIAR
               </Button>}
-            <Button onClick={toggleReady} available size={[6,3]}>
+            <Button onClick={toggleReady} available size={[9, 3]}>
               {playerState.ready ? "CANCELAR" : "PRONTO"}
             </Button>
           </div>

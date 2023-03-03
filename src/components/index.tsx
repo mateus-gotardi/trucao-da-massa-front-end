@@ -10,7 +10,7 @@ const colors = {
     black: "#111111",
     red: "#ee0000",
     white: "#ececec",
-    blue: "#303390",
+    blue: "#0057A4",
 }
 
 export { Card, colors, HiddenCard, GameTable, Button, RoomsList, HomePage, LobbyComponent };

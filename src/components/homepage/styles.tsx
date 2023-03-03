@@ -13,6 +13,16 @@ export const HomeStyle = styled.div<{ colors: IColorProps }>`
     flex-direction: column;
     align-items: center;
     justify-content: center;
+    >div {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        justify-content: center;
+        overflow: hidden;
+        padding: 2rem;
+        border-radius: .8rem;
+        background-color: rgba(17, 17, 17, 0.7);
+    }
     h1{
         font-size: 2rem;
         text-align: center;

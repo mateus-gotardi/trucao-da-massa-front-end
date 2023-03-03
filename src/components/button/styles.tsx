@@ -28,9 +28,9 @@ export const ButtonStyles = styled.button<{ inactive: boolean, colors:IColorProp
 
   #label {
     position: relative;
-    font-size: ${({ size }) => size[1]-2}rem;
+    font-size: ${({ size }) => size[1]-1.5}rem;
     line-height: 0;
-
+    
   }
 
   #transition {
@@ -46,8 +46,8 @@ export const ButtonStyles = styled.button<{ inactive: boolean, colors:IColorProp
     transform: translate(-50%, -50%);
   }
   >span >svg{
-    width: ${({ size }) => size[1]-0.7}rem;
-    height: ${({ size }) => size[1]-0.7}rem;
+    width: ${({ size }) => size[1]-1}rem;
+    height: ${({ size }) => size[1]-1}rem;
   }
 
   ${({ inactive, size }) =>
