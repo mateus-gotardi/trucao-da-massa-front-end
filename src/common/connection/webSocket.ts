@@ -1,6 +1,6 @@
 import { io } from "socket.io-client";
 
-const client = io("http://localhost:3333/");
+const client = io(process.env.NEXT_PUBLIC_BACKEND_URL as string);
 
 const socket = {
   on: (event: string, callback: (data: any) => void) => {
