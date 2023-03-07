@@ -544,6 +544,7 @@ export const ConfigModalStyles = styled.div<{ colors: IColorProps }>`
       border: none;
       background-color: transparent;
       font-size: 1.5rem;
+      width: 3rem;
       cursor: pointer;
       border-radius: 50%;
       padding: .5rem ;
@@ -580,5 +581,56 @@ export const TimerStyles = styled.div<{ colors: IColorProps }>`
     100% {
       width: 10rem;
     }
+  }
+`
+
+export const HelpStyles = styled.div<{ colors: IColorProps }>`
+  position: absolute;
+  z-index: 999;
+  background-color: ${({ colors }) => colors.white};
+  padding: 1.5rem;
+  border-radius: 0.5rem;
+  box-shadow: 3px 3px 0px 0px rgba(0,0,0,1);
+  display: flex;
+  flex-direction: column;
+  align-items: flex-start;
+  justify-content: center;
+  gap:1rem;
+  top:50%;
+  left:50%;
+  transform: translate(-50%, -50%);
+  width: 25rem;
+  color: ${({ colors }) => colors.blue};
+  text-align: center;
+  >h1 {
+    font-size: 1.5rem;
+    width: 100%;
+  }
+  >h2 {
+    font-size: 1.2rem;
+    width: 100%;
+  }
+  >h3{
+    width: 100%;
+    font-size: 1rem;
+  }
+  >h4{
+    width: 100%;
+    font-size: .8rem;
+  }
+  >p{
+    width: 100%;
+    display: flex;
+    justify-content:space-between;
+    >span {
+      font-weight: 700;
+    }
+  }
+  >div{
+    width: 100%;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+
   }
 `

@@ -13,6 +13,7 @@ import { useRouter } from "next/router";
 import OtherPlayer from "./otherPlayer";
 import { ScenarioContext } from "ScenarioContext";
 import ConfigModal from "./config";
+import Help from "./help";
 
 const ScoreBall: React.FC<{ fillColor: boolean }> = ({ fillColor }) => {
   return <Styled.ScoreBall fillColor={fillColor} />;
@@ -27,6 +28,7 @@ const GameTable: React.FC = () => {
   const [info, setInfo] = useState<string>('');
   const [trucoAsker, setTrucoAsker] = useState<string>('');
   const [hideCard, setHideCard] = useState<boolean>(false);
+  const [help, setHelp] = useState<boolean>(false);
   const value = useContext(GameContext);
   const scenarioCtx = useContext(ScenarioContext)
   let { tableImg, scenario } = scenarioCtx
@@ -181,6 +183,7 @@ const GameTable: React.FC = () => {
       {trucoModal !== '' && <TrucoModal setModal={() => setTrucoModal('')} type={trucoModal} asker={trucoAsker} />}
       {elevenModal && <ElevenHandModal showModal={() => setElevenModal(false)} partnerHand={partner?.hand} myHand={playerState.hand} />}
       {info !== '' && <InfoModal close={() => setInfo('')}><h3>{info}</h3></InfoModal>}
+      {help && <Help close={() => setHelp(false)} />}
       {gameState.gameFinished && finished && <InfoModal close={() => { setFinished(false) }}>
         <h2>{gameState.winner}</h2>
         <h3>Placar: {gameState.score.team1} X {gameState.score.team2}</h3>
@@ -240,7 +243,7 @@ const GameTable: React.FC = () => {
       <OtherPlayer side='middle' player={partner} />
       <Styled.ConfigStyles colors={colors}>
         <section>
-          <BsQuestionLg size={30} />
+          <BsQuestionLg size={30} onClick={() => { setHelp(true) }}/>
 
           <BsFillGearFill size={30} onClick={() => { setShowConfig(true) }} />
 
