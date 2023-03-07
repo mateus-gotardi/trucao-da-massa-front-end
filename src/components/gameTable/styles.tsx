@@ -103,7 +103,7 @@ export const ScoreStyles = styled.div<{ colors: IColorProps }>`
   width: fit-content;
   flex-direction: column;
   grid-area: 1 / 1 / 2 / 2;
-  background-color: rgba(17, 17, 17, 0.7);
+  background-color: ${({ colors }) => colors.transparentBlack};
   box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.7);
   #score {
     width: 18rem;
@@ -399,7 +399,7 @@ export const OtherPlayerHand = styled.div<{ side?: string, colors: IColorProps }
     padding: .5rem 1rem 0 1rem;
     border-radius: 1rem;
     font-size: 1.2rem;
-    background-color: rgba(17, 17, 17, 0.7);
+    background-color: ${({ colors }) => colors.transparentBlack};
   }
   > div { 
     display: flex;
@@ -468,7 +468,8 @@ export const OtherPlayerHand = styled.div<{ side?: string, colors: IColorProps }
 export const ModalStyles = styled.div<{ colors: IColorProps }>`
   position: absolute;
   z-index: 999;
-  background-color: ${({ colors }) => colors.white};
+  color: ${({ colors }) => colors.white};
+  background-color: ${({ colors }) => colors.transparentBlack};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -494,9 +495,10 @@ export const ModalStyles = styled.div<{ colors: IColorProps }>`
 `;
 
 export const ElevenModal = styled.div<{ colors: IColorProps }>`
-position: absolute;
+  position: absolute;
   z-index: 999;
-  background-color: ${({ colors }) => colors.white};
+  background-color: ${({ colors }) => colors.transparentBlack};
+  color: ${({ colors }) => colors.white};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -512,7 +514,7 @@ position: absolute;
 export const ConfigModalStyles = styled.div<{ colors: IColorProps }>`
   position: absolute;
   z-index: 999;
-  background-color: ${({ colors }) => colors.white};
+  background-color: ${({ colors }) => colors.transparentBlack};
   padding: 1.5rem;
   border-radius: 0.5rem;
   box-shadow: 3px 3px 0px 0px rgba(0,0,0,1);
@@ -525,7 +527,7 @@ export const ConfigModalStyles = styled.div<{ colors: IColorProps }>`
   left:50%;
   transform: translate(-50%, -50%);
   width: 18rem;
-  color: ${({ colors }) => colors.blue};
+  color: ${({ colors }) => colors.white};
   .selector{
     > select {
       border: none;
@@ -540,7 +542,7 @@ export const ConfigModalStyles = styled.div<{ colors: IColorProps }>`
     justify-content: space-between;
     font-size: 1rem;
     > button {
-      color: ${({ colors }) => colors.blue};
+      color: ${({ colors }) => colors.white};
       border: none;
       background-color: transparent;
       font-size: 1.5rem;
@@ -587,7 +589,7 @@ export const TimerStyles = styled.div<{ colors: IColorProps }>`
 export const HelpStyles = styled.div<{ colors: IColorProps }>`
   position: absolute;
   z-index: 999;
-  background-color: ${({ colors }) => colors.white};
+  background-color: ${({ colors }) => colors.transparentBlack};
   padding: 1.5rem;
   border-radius: 0.5rem;
   box-shadow: 3px 3px 0px 0px rgba(0,0,0,1);
@@ -600,7 +602,7 @@ export const HelpStyles = styled.div<{ colors: IColorProps }>`
   left:50%;
   transform: translate(-50%, -50%);
   width: 25rem;
-  color: ${({ colors }) => colors.blue};
+  color: ${({ colors }) => colors.white};
   text-align: center;
   >h1 {
     font-size: 1.5rem;
@@ -622,6 +624,13 @@ export const HelpStyles = styled.div<{ colors: IColorProps }>`
     width: 100%;
     display: flex;
     justify-content:space-between;
+    >svg{
+      background-color: ${({ colors }) => colors.white};
+      padding: .2rem;
+      width: 2rem;
+      height: 2rem;
+      border-radius: 50%;
+    }
     >span {
       font-weight: 700;
     }
@@ -631,6 +640,8 @@ export const HelpStyles = styled.div<{ colors: IColorProps }>`
     display: flex;
     justify-content: center;
     align-items: center;
-
+  }
+  @media (max-width: 440px) {
+    width: 20rem;
   }
 `
