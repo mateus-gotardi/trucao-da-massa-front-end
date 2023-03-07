@@ -55,5 +55,9 @@ export interface IRoomDetails {
 }
 
 export interface IColorProps {
-  black: string; red: string; white: string, blue: string;
+  black: string;
+  red: string;
+  white: string;
+  blue: string;
+  transparentBlack: string;
 }

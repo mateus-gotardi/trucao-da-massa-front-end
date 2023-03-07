@@ -103,7 +103,7 @@ export const ScoreStyles = styled.div<{ colors: IColorProps }>`
   width: fit-content;
   flex-direction: column;
   grid-area: 1 / 1 / 2 / 2;
-  background-color: rgba(17, 17, 17, 0.7);
+  background-color: ${({ colors }) => colors.transparentBlack};
   box-shadow: 4px 4px 0px 0px rgba(0,0,0,0.7);
   #score {
     width: 18rem;
@@ -399,7 +399,7 @@ export const OtherPlayerHand = styled.div<{ side?: string, colors: IColorProps }
     padding: .5rem 1rem 0 1rem;
     border-radius: 1rem;
     font-size: 1.2rem;
-    background-color: rgba(17, 17, 17, 0.7);
+    background-color: ${({ colors }) => colors.transparentBlack};
   }
   > div { 
     display: flex;
@@ -468,7 +468,7 @@ export const OtherPlayerHand = styled.div<{ side?: string, colors: IColorProps }
 export const ModalStyles = styled.div<{ colors: IColorProps }>`
   position: absolute;
   z-index: 999;
-  background-color: ${({ colors }) => colors.white};
+  background-color: ${({ colors }) => colors.transparentBlack};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -496,7 +496,7 @@ export const ModalStyles = styled.div<{ colors: IColorProps }>`
 export const ElevenModal = styled.div<{ colors: IColorProps }>`
 position: absolute;
   z-index: 999;
-  background-color: ${({ colors }) => colors.white};
+  background-color: ${({ colors }) => colors.transparentBlack};
   display: flex;
   flex-direction: column;
   align-items: center;
@@ -512,7 +512,7 @@ position: absolute;
 export const ConfigModalStyles = styled.div<{ colors: IColorProps }>`
   position: absolute;
   z-index: 999;
-  background-color: ${({ colors }) => colors.white};
+  background-color: ${({ colors }) => colors.transparentBlack};
   padding: 1.5rem;
   border-radius: 0.5rem;
   box-shadow: 3px 3px 0px 0px rgba(0,0,0,1);
@@ -587,7 +587,7 @@ export const TimerStyles = styled.div<{ colors: IColorProps }>`
 export const HelpStyles = styled.div<{ colors: IColorProps }>`
   position: absolute;
   z-index: 999;
-  background-color: ${({ colors }) => colors.white};
+  background-color: ${({ colors }) => colors.transparentBlack};
   padding: 1.5rem;
   border-radius: 0.5rem;
   box-shadow: 3px 3px 0px 0px rgba(0,0,0,1);

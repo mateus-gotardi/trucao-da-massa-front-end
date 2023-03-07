@@ -11,6 +11,7 @@ const colors = {
     red: "#ee0000",
     white: "#ececec",
     blue: "#0057A4",
+    transparentBlack: 'rgba(17, 17, 17, 0.7)'
 }
 
 export { Card, colors, HiddenCard, GameTable, Button, RoomsList, HomePage, LobbyComponent };
